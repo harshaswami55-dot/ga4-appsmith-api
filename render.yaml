@@ -5,7 +5,7 @@ services:
     plan: free
     region: singapore
     rootDir: node-backend
-    buildCommand: npm install
+    buildCommand: npm install && npm run build
     startCommand: npm start
     healthCheckPath: /health
     autoDeployTrigger: commit
@@ -15,14 +15,14 @@ services:
       - key: NODE_ENV
         value: production
       - key: GA4_PROPERTY_ID
-        value: "516899630"
-      - key: GOOGLE_APPLICATION_CREDENTIALS_JSON
         sync: false
-      - key: AUTH_ENABLED
-        value: "true"
-      - key: API_KEYS
+      - key: GOOGLE_SERVICE_ACCOUNT_JSON
         sync: false
-      - key: APPSMITH_ORIGIN
+      - key: API_KEY
         sync: false
-      - key: CACHE_TTL_MS
-        value: "300000"
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: CACHE_TTL_SECONDS
+        value: "300"
+      - key: RATE_LIMIT_MAX
+        value: "100"

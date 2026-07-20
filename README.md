@@ -2,7 +2,7 @@
 
 Full-stack GA4 analytics system for Appsmith and Render:
 
-- `node-backend/`: the production Node.js/Express API required by the dashboard specification
+- `node-backend/`: the production TypeScript/Express API required by the dashboard specification
 - `appsmith/`: query, JS Object, filter, widget, chart, and page-build instructions
 - `backend/`: the earlier FastAPI implementation retained as a tested reference
 - `render.yaml`: Render Free Blueprint for the Node service
@@ -21,7 +21,7 @@ npm start
 
 Local URL: `http://127.0.0.1:8000`. Health and GA4 readiness are available at `/health` and `/ready`.
 
-The API includes ten dashboard endpoints, common Appsmith filters, GA4 offset pagination, five-minute caching, configurable CORS, API-key protection, and raw/base64 service-account credentials for Render.
+The API includes ten dashboard endpoints, common Appsmith filters, GA4 offset pagination, five-minute endpoint caching, strict CORS, rate limiting, Helmet, Pino logging, Zod validation, API-key protection, and base64 service-account credentials for Render.
 
 See:
 
@@ -31,7 +31,7 @@ See:
 
 ## Security
 
-The service-account JSON and local `.env` files are ignored by Git. Render receives the key through the secret `GOOGLE_APPLICATION_CREDENTIALS_JSON` environment value. Appsmith receives only the public Render URL and an `X-API-Key`; it never receives GA4 credentials.
+The service-account JSON and local `.env` files are ignored by Git. Render receives the key through the secret `GOOGLE_SERVICE_ACCOUNT_JSON` environment value. Appsmith receives only the public Render URL and an `x-api-key`; it never receives GA4 credentials.
 
 ## Validation
 
@@ -43,4 +43,3 @@ npm test
 ```
 
 All endpoints have also been exercised directly against the live GA4 property.
-

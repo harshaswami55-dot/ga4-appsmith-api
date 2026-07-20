@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "Node/Express GA4 backend for the Sumlink Appsmith dashboard",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "test": "node --test"
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "test": "tsx --test test/**/*.test.ts",
+    "typecheck": "tsc --noEmit"
   },
   "engines": {
     "node": ">=20"
@@ -16,10 +18,20 @@
     "@google-analytics/data": "6.1.0",
     "cors": "2.8.6",
     "dotenv": "17.4.2",
-    "express": "5.2.1"
+    "express": "5.2.1",
+    "express-rate-limit": "8.6.0",
+    "helmet": "8.3.0",
+    "node-cache": "5.1.2",
+    "pino-http": "11.0.0",
+    "zod": "4.4.3"
   },
   "devDependencies": {
-    "supertest": "7.2.2"
+    "@types/cors": "2.8.19",
+    "@types/express": "5.0.6",
+    "@types/node": "24.10.1",
+    "@types/supertest": "6.0.3",
+    "supertest": "7.2.2",
+    "tsx": "4.23.1",
+    "typescript": "7.0.2"
   }
 }
-

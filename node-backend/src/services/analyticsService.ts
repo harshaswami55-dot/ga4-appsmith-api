@@ -1,7 +1,8 @@
-const { getGA4Client } = require("../ga4Client");
-const { reportOptions, exactFilter, inListFilter, andFilters, pagination } = require("../utils/filters");
+import { getGA4Client } from "../ga4Client";
+import { reportOptions, exactFilter, inListFilter, pagination, AnalyticsQuery } from "../utils/filters";
+import { GA4Client } from "../ga4Client";
 
-const EVENTS = {
+export const EVENTS = {
   install: "first_open",
   uninstall: "app_remove",
   tutorialStep: "tutorial_step",
@@ -50,7 +51,7 @@ async function eventReport(client, options, eventNames, dimensions = ["eventName
   });
 }
 
-async function runAllPages(client, request, batchSize = 250) {
+export async function runAllPages(client: GA4Client | any, request: any, batchSize = 250) {
   const rows = [];
   let offset = 0;
   let rowCount = 0;
@@ -77,7 +78,7 @@ function pivotByDate(rows, eventNames) {
   });
 }
 
-async function executiveHealth(query, client = getGA4Client()) {
+export async function executiveHealth(query: AnalyticsQuery, client = getGA4Client()) {
   const options = reportOptions(query);
   const [summary, daily, users] = await Promise.all([
     client.runReport({ ...options, metrics: ["activeUsers", "newUsers", "engagementRate"] }),
@@ -101,7 +102,7 @@ async function executiveHealth(query, client = getGA4Client()) {
   };
 }
 
-async function acquisitionChurn(query, client = getGA4Client()) {
+export async function acquisitionChurn(query: AnalyticsQuery, client = getGA4Client()) {
   const options = reportOptions(query);
   const [events, channels] = await Promise.all([
     eventReport(client, options, [EVENTS.install, EVENTS.uninstall], ["date", "eventName"]),
@@ -124,7 +125,7 @@ async function acquisitionChurn(query, client = getGA4Client()) {
   };
 }
 
-async function onboardingFunnel(query, client = getGA4Client()) {
+export async function onboardingFunnel(query: AnalyticsQuery, client = getGA4Client()) {
   const options = reportOptions(query);
   const names = [EVENTS.install, EVENTS.tutorialStep, EVENTS.tutorialMatchMade, EVENTS.levelStart];
   const report = await eventReport(client, options, names, ["eventName"], ["eventCount"]);
@@ -135,14 +136,14 @@ async function onboardingFunnel(query, client = getGA4Client()) {
   };
 }
 
-async function tutorialFrustration(query, client = getGA4Client()) {
+export async function tutorialFrustration(query: AnalyticsQuery, client = getGA4Client()) {
   const options = reportOptions(query);
   const names = [EVENTS.tutorialStep, EVENTS.tutorialFailed];
   const [summary, daily] = await Promise.all([
     eventReport(client, options, names, ["eventName"], ["eventCount", "totalUsers"]),
     eventReport(client, options, names, ["date", "eventName"], ["eventCount"]),
   ]);
-  const map = new Map(summary.rows.map((row) => [row.eventName, row]));
+  const map = new Map<string, any>(summary.rows.map((row: any) => [row.eventName, row]));
   const started = map.get(EVENTS.tutorialStep) || {};
   const failed = map.get(EVENTS.tutorialFailed) || {};
   const trend = pivotByDate(daily.rows, names).map((row) => ({
@@ -162,7 +163,7 @@ async function tutorialFrustration(query, client = getGA4Client()) {
   };
 }
 
-async function gameplayBalancing(query, client = getGA4Client()) {
+export async function gameplayBalancing(query: AnalyticsQuery, client = getGA4Client()) {
   const options = reportOptions(query);
   const hints = [EVENTS.hintHighlighted, EVENTS.hintClicked, EVENTS.hintUsed];
   const [players, hintReport] = await Promise.all([
@@ -197,7 +198,7 @@ function levelSort(a, b) {
   return String(a.levelNumber).localeCompare(String(b.levelNumber));
 }
 
-async function levelDifficulty(query, client = getGA4Client()) {
+export async function levelDifficulty(query: AnalyticsQuery, client = getGA4Client()) {
   const options = reportOptions(query);
   const pageOptions = pagination(query);
   const report = await runAllPages(client, {
@@ -234,7 +235,7 @@ async function levelDifficulty(query, client = getGA4Client()) {
   };
 }
 
-async function retention(query, client = getGA4Client()) {
+export async function retention(query: AnalyticsQuery, client = getGA4Client()) {
   const options = reportOptions(query);
   const [summary, types, engagement, sessions] = await Promise.all([
     client.runReport({ ...options, metrics: ["newUsers", "engagedSessions", "activeUsers", "sessions"] }),
@@ -251,7 +252,7 @@ async function retention(query, client = getGA4Client()) {
   };
 }
 
-async function dauMau(query, client = getGA4Client()) {
+export async function dauMau(query: AnalyticsQuery, client = getGA4Client()) {
   const options = reportOptions(query);
   const report = await client.runReport({ ...options, dimensions: ["date"], metrics: ["activeUsers", "active28DayUsers"], limit: 1000 });
   return {
@@ -260,7 +261,7 @@ async function dauMau(query, client = getGA4Client()) {
   };
 }
 
-async function tutorialSkip(query, client = getGA4Client()) {
+export async function tutorialSkip(query: AnalyticsQuery, client = getGA4Client()) {
   const options = reportOptions(query);
   const names = [EVENTS.tutorialStep, EVENTS.tutorialSkipped, EVENTS.tutorialSkipAttempt];
   const [events, duration] = await Promise.all([
@@ -283,7 +284,7 @@ async function tutorialSkip(query, client = getGA4Client()) {
   return { skipTrend: trend, averageTimePerStep: duration.rows, meta: metadata(query, [events, duration]) };
 }
 
-async function neverPlayed(query, client = getGA4Client()) {
+export async function neverPlayed(query: AnalyticsQuery, client = getGA4Client()) {
   const options = reportOptions(query);
   const report = await eventReport(client, options, [EVENTS.install, EVENTS.levelStart], ["date", "eventName"], ["totalUsers"]);
   const trend = pivotByDate(report.rows, [EVENTS.install, EVENTS.levelStart]).map((row) => ({
@@ -298,19 +299,3 @@ async function neverPlayed(query, client = getGA4Client()) {
     meta: metadata(query, [report]),
   };
 }
-
-module.exports = {
-  EVENTS,
-  executiveHealth,
-  acquisitionChurn,
-  onboardingFunnel,
-  tutorialFrustration,
-  gameplayBalancing,
-  levelDifficulty,
-  retention,
-  dauMau,
-  tutorialSkip,
-  neverPlayed,
-  runAllPages,
-};
-

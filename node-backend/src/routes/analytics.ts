@@ -1,17 +1,11 @@
-const express = require("express");
-const analytics = require("../services/analyticsService");
+import { Router, Request, Response, NextFunction } from "express";
+import * as analytics from "../services/analyticsService";
+import { AnalyticsQuery } from "../utils/filters";
 
-const router = express.Router();
-
-function endpoint(handler) {
-  return async (req, res, next) => {
-    try {
-      res.json(await handler(req.query));
-    } catch (error) {
-      next(error);
-    }
-  };
-}
+const router = Router();
+const endpoint = (handler: (query: AnalyticsQuery) => Promise<unknown>) => async (_req: Request, res: Response, next: NextFunction) => {
+  try { res.json(await handler(res.locals.analyticsQuery)); } catch (error) { next(error); }
+};
 
 router.get("/executive-health", endpoint(analytics.executiveHealth));
 router.get("/acquisition-churn", endpoint(analytics.acquisitionChurn));
@@ -24,5 +18,5 @@ router.get("/dau-mau", endpoint(analytics.dauMau));
 router.get("/tutorial-skip", endpoint(analytics.tutorialSkip));
 router.get("/never-played", endpoint(analytics.neverPlayed));
 
-module.exports = router;
+export default router;
 

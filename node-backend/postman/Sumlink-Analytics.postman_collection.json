@@ -1,0 +1,34 @@
+{
+  "info": {
+    "name": "Sumlink Analytics API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://sumlink-analytics-api.onrender.com" },
+    { "key": "apiKey", "value": "" },
+    { "key": "startDate", "value": "30daysAgo" },
+    { "key": "endDate", "value": "yesterday" }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      { "key": "key", "value": "x-api-key", "type": "string" },
+      { "key": "value", "value": "{{apiKey}}", "type": "string" },
+      { "key": "in", "value": "header", "type": "string" }
+    ]
+  },
+  "item": [
+    { "name": "Health", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/health" } },
+    { "name": "Ready", "request": { "method": "GET", "url": "{{baseUrl}}/ready" } },
+    { "name": "Executive Health", "request": { "method": "GET", "url": "{{baseUrl}}/api/executive-health?startDate={{startDate}}&endDate={{endDate}}" } },
+    { "name": "Acquisition Churn", "request": { "method": "GET", "url": "{{baseUrl}}/api/acquisition-churn?startDate={{startDate}}&endDate={{endDate}}" } },
+    { "name": "Onboarding Funnel", "request": { "method": "GET", "url": "{{baseUrl}}/api/onboarding-funnel?startDate={{startDate}}&endDate={{endDate}}" } },
+    { "name": "Tutorial Frustration", "request": { "method": "GET", "url": "{{baseUrl}}/api/tutorial-frustration?startDate={{startDate}}&endDate={{endDate}}" } },
+    { "name": "Gameplay Balancing", "request": { "method": "GET", "url": "{{baseUrl}}/api/gameplay-balancing?startDate={{startDate}}&endDate={{endDate}}" } },
+    { "name": "Level Difficulty", "request": { "method": "GET", "url": "{{baseUrl}}/api/level-difficulty?startDate={{startDate}}&endDate={{endDate}}&page=1&pageSize=20" } },
+    { "name": "Retention", "request": { "method": "GET", "url": "{{baseUrl}}/api/retention?startDate={{startDate}}&endDate={{endDate}}" } },
+    { "name": "DAU MAU", "request": { "method": "GET", "url": "{{baseUrl}}/api/dau-mau?startDate={{startDate}}&endDate={{endDate}}" } },
+    { "name": "Tutorial Skip", "request": { "method": "GET", "url": "{{baseUrl}}/api/tutorial-skip?startDate={{startDate}}&endDate={{endDate}}" } },
+    { "name": "Never Played", "request": { "method": "GET", "url": "{{baseUrl}}/api/never-played?startDate={{startDate}}&endDate={{endDate}}" } }
+  ]
+}
