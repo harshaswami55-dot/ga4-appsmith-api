@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: sumlink-analytics-api
+    runtime: python
+    plan: free
+    region: singapore
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: ENVIRONMENT
+        value: production
+      - key: GA4_PROPERTY_ID
+        value: "516899630"
+      - key: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/secrets/ga4-service-account.json
+      - key: AUTH_ENABLED
+        value: "true"
+      - key: API_KEYS
+        sync: false
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: CACHE_TTL_SECONDS
+        value: "300"
+      - key: EVENT_INSTALL
+        value: first_open
+      - key: EVENT_TUTORIAL_START
+        value: tutorial_step
+      - key: EVENT_TUTORIAL_COMPLETE
+        value: tutorial_completed
+      - key: EVENT_TUTORIAL_FAIL
+        value: tutorial_match_failed
+      - key: EVENT_TUTORIAL_SKIP
+        value: tutorial_skipped
+      - key: EVENT_LEVEL_START
+        value: level_start
+      - key: EVENT_LEVEL_COMPLETE
+        value: level_complete
+      - key: EVENT_HINT_USED
+        value: hint_used_successfully
+      - key: LEVEL_DIMENSION
+        value: customEvent:level_number
+      - key: TUTORIAL_STEP_DIMENSION
+        value: customEvent:step_number
+      - key: LEVEL_TIME_METRIC
+        value: averageCustomEvent:time_taken
+      - key: TUTORIAL_TIME_METRIC
+        value: averageCustomEvent:time_taken
+

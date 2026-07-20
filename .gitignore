@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+backend/.env
+*.log
+.idea/
+.vscode/
+credentials/
+*.pem
+*service-account*.json
+
