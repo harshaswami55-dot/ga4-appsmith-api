@@ -10,29 +10,25 @@ export default {
 
   params() {
     return {
-      start_date: this.isoDate(StartDatePicker, "30daysAgo"),
-      end_date: this.isoDate(EndDatePicker, "yesterday"),
-      country: this.value(CountrySelect),
-      platform: this.value(PlatformSelect),
-      device_category: this.value(DeviceCategorySelect),
-      device_model: this.value(DeviceModelSelect),
-      os_version: this.value(OSVersionSelect),
-      app_version: this.value(AppVersionSelect),
-      traffic_source: this.value(TrafficSourceSelect),
-      campaign: this.value(CampaignSelect),
-      user_type: this.value(UserTypeSelect),
-      level_number: this.value(LevelNumberSelect),
-      tutorial_step: this.value(TutorialStepSelect),
+      startDate: this.isoDate(StartDatePicker, "30daysAgo"),
+      endDate: this.isoDate(EndDatePicker, "yesterday"),
+      appVersion: this.value(AppVersionSelect),
+      osVersion: this.value(OSVersionSelect),
+      deviceModel: this.value(DeviceModelSelect),
+      newReturning: this.value(NewReturningSelect),
     };
   },
 
   async refreshCurrentPage() {
     const queryByPage = {
-      "Executive Dashboard": ExecutiveSummary,
-      "Acquisition Dashboard": AcquisitionSummary,
-      "Onboarding Dashboard": OnboardingSummary,
-      "Gameplay Dashboard": GameplaySummary,
-      "Retention Dashboard": RetentionSummary,
+      "Executive Health": getExecutiveHealth,
+      "Acquisition & Churn": getAcquisitionChurn,
+      "Onboarding Health": getOnboardingFunnel,
+      "Core Gameplay & Balancing": getGameplayBalancing,
+      "Level Difficulty": getLevelDifficulty,
+      "Retention Dashboard": getRetention,
+      "DAU MAU": getDauMau,
+      "Tutorial Diagnostics": getTutorialSkip,
     };
     const query = queryByPage[appsmith.currentPageName];
     if (!query) {
@@ -40,5 +36,20 @@ export default {
       return;
     }
     await ApiRunner.run(query);
+  },
+
+  async refreshAll() {
+    return Promise.all([
+      getExecutiveHealth,
+      getAcquisitionChurn,
+      getOnboardingFunnel,
+      getTutorialFrustration,
+      getGameplayBalancing,
+      getLevelDifficulty,
+      getRetention,
+      getDauMau,
+      getTutorialSkip,
+      getNeverPlayed,
+    ].map((query) => ApiRunner.run(query)));
   },
 };

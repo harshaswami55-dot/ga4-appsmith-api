@@ -1,0 +1,25 @@
+{
+  "name": "sumlink-analytics-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Node/Express GA4 backend for the Sumlink Appsmith dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@google-analytics/data": "6.1.0",
+    "cors": "2.8.6",
+    "dotenv": "17.4.2",
+    "express": "5.2.1"
+  },
+  "devDependencies": {
+    "supertest": "7.2.2"
+  }
+}
+

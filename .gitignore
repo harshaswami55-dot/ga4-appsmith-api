@@ -12,4 +12,5 @@ backend/.env
 credentials/
 *.pem
 *service-account*.json
-
+node_modules/
+npm-debug.log*
