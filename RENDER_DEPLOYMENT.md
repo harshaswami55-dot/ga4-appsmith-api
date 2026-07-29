@@ -1,49 +1,103 @@
-# Deploy the Node API on Render Free
+# Deploy the FastAPI GA4 backend on Render
 
-`render.yaml` deploys `node-backend` as a free Node Web Service in Singapore. It runs `npm install && npm run build`, starts compiled TypeScript with `npm start`, and checks `/health`.
+`render.yaml` now deploys the `backend/` FastAPI service as a Render Docker Web Service. This is the API that Appsmith calls to fetch live GA4 data from property `516899630`.
 
-## Blueprint values
+## Flow
 
-When Render imports the repository Blueprint, it prompts for four environment values:
+Appsmith dashboard → Render FastAPI API → GA4 Data API
 
-- `GOOGLE_SERVICE_ACCOUNT_JSON`: the service-account JSON encoded as base64.
-- `GA4_PROPERTY_ID`: `516899630`.
-- `API_KEY`: a long random API key used by the Appsmith datasource.
-- `ALLOWED_ORIGINS`: comma-separated Appsmith origins such as `https://app.appsmith.com`. Wildcards are not accepted.
+Render hosts the backend API only. Appsmith itself still needs to run separately, either through the current local/self-hosted Appsmith setup or another Appsmith host.
 
-Create the credential value in PowerShell without printing it:
+## Render environment variables
+
+Render will ask for these secrets:
+
+- `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64`
+- `API_KEYS`
+- `CORS_ORIGINS`
+
+These are already set in `render.yaml`:
+
+- `ENVIRONMENT=production`
+- `GA4_PROPERTY_ID=516899630`
+- `AUTH_ENABLED=true`
+- `CACHE_TTL_SECONDS=300`
+
+## Create the GA4 credential secret
+
+Run this in PowerShell. It copies the base64 service-account JSON to your clipboard without printing the key:
 
 ```powershell
 $credentialPath = "C:\Users\harsh\credentials\phrasal-clover-493807-m9-4019d33cb4de.json"
-$credentialBase64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes($credentialPath))
+[Convert]::ToBase64String([IO.File]::ReadAllBytes($credentialPath)) | Set-Clipboard
 ```
 
-Copy `$credentialBase64` to the Render environment value using the clipboard:
+Paste that value into Render as:
 
-```powershell
-$credentialBase64 | Set-Clipboard
+```text
+GOOGLE_SERVICE_ACCOUNT_JSON_BASE64
 ```
 
-Generate and copy an API key:
+## Create the API key secret
+
+Run this in PowerShell. It copies a random API key to your clipboard:
 
 ```powershell
 $bytes = New-Object byte[] 32
 $rng = [Security.Cryptography.RandomNumberGenerator]::Create()
 try { $rng.GetBytes($bytes) } finally { $rng.Dispose() }
-$apiKey = [Convert]::ToBase64String($bytes)
-$apiKey | Set-Clipboard
+[Convert]::ToBase64String($bytes) | Set-Clipboard
 ```
 
-Never commit either value.
+Paste that value into Render as:
 
-## Deploy
+```text
+API_KEYS
+```
 
-1. In Render, choose **New → Blueprint**.
-2. Connect `harshaswami55-dot/ga4-appsmith-api`.
-3. Enter the four prompted environment values.
-4. Apply the Blueprint and wait for deployment.
-5. Verify `https://<host>/health` and `https://<host>/ready`.
+For local Appsmith testing you can temporarily set:
 
-`/ready` must return `"connected": true` when called with the `x-api-key` header. Configure Appsmith with base URL `https://<host>/api` and the same `API_KEY` value.
+```text
+CORS_ORIGINS=*
+```
 
-Render Free sleeps after 15 minutes idle. `appsmith/JSObjects/ApiRunner.js` retries for approximately one minute during wake-up.
+For production, lock it to the final Appsmith URL.
+
+## Deploy from GitHub
+
+1. Push this repository to GitHub.
+2. Open Render.
+3. Choose **New → Blueprint**.
+4. Select `harshaswami55-dot/ga4-appsmith-api`.
+5. Enter the three secret env vars above.
+6. Apply the Blueprint and wait for the service to become live.
+
+Check:
+
+```text
+https://<your-render-service>.onrender.com/health
+```
+
+Then check readiness with the API key:
+
+```powershell
+curl.exe -H "x-api-key: YOUR_API_KEY" https://<your-render-service>.onrender.com/ready
+```
+
+`/ready` should show GA4 connected.
+
+## Connect Appsmith to Render
+
+After Render is live, update the Appsmith REST datasource/base URL:
+
+```text
+https://<your-render-service>.onrender.com
+```
+
+Add this header to Appsmith API calls:
+
+```text
+x-api-key: YOUR_API_KEY
+```
+
+Render Free can sleep when idle, so the first request after inactivity may take extra time.

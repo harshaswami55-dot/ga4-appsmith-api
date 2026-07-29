@@ -1,5 +1,7 @@
+import base64
 import hashlib
 import json
+from datetime import timedelta
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -13,6 +15,17 @@ from app.schemas.filters import DashboardFilters
 from app.utils.cache import TTLCache
 from app.utils.dates import resolve_ga4_date
 from app.utils.numbers import number
+
+
+def clean_dimension_value(value: str) -> str:
+    raw = str(value or "").strip()
+    if raw in {"", "(not set)", "(none)", "not set"}:
+        return "Unknown"
+    if raw.startswith("apps.") and raw.endswith(".com"):
+        return raw.removeprefix("apps.").removesuffix(".com").title()
+    if raw == "(direct)":
+        return "Direct"
+    return raw
 
 
 class GA4QueryError(RuntimeError):
@@ -64,6 +77,35 @@ class GA4Service:
         self.client = client or self._build_client()
 
     def _build_client(self) -> BetaAnalyticsDataClient:
+        if self.settings.google_service_account_json_base64:
+            try:
+                decoded = base64.b64decode(self.settings.google_service_account_json_base64).decode("utf-8")
+                info = json.loads(decoded)
+            except Exception as exc:
+                raise GA4QueryError(
+                    "GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 is not valid base64 service account JSON",
+                    code="INVALID_CREDENTIAL_JSON",
+                ) from exc
+            credentials = service_account.Credentials.from_service_account_info(
+                info,
+                scopes=["https://www.googleapis.com/auth/analytics.readonly"],
+            )
+            return BetaAnalyticsDataClient(credentials=credentials)
+
+        if self.settings.google_service_account_json:
+            try:
+                info = json.loads(self.settings.google_service_account_json)
+            except json.JSONDecodeError as exc:
+                raise GA4QueryError(
+                    "GOOGLE_SERVICE_ACCOUNT_JSON is not valid service account JSON",
+                    code="INVALID_CREDENTIAL_JSON",
+                ) from exc
+            credentials = service_account.Credentials.from_service_account_info(
+                info,
+                scopes=["https://www.googleapis.com/auth/analytics.readonly"],
+            )
+            return BetaAnalyticsDataClient(credentials=credentials)
+
         credential_path = self.settings.google_application_credentials
         if credential_path:
             path = Path(credential_path).expanduser()
@@ -162,6 +204,55 @@ class GA4Service:
             request["dimension_filter"] = dimension_filter
         return self._execute(request)
 
+    def run_daily_cohort_report(
+        self,
+        *,
+        filters: DashboardFilters,
+        end_offset: int = 15,
+        max_cohorts: int = 10,
+    ) -> list[dict[str, Any]]:
+        start_date = resolve_ga4_date(filters.start_date)
+        end_date = resolve_ga4_date(filters.end_date)
+        total_days = (end_date - start_date).days + 1
+        if total_days > max_cohorts:
+            # For manager-facing retention tables, prefer the earliest cohorts in
+            # the selected range. They are mature enough to show Day 7 / Day 15
+            # retention, while very recent cohorts naturally have blank later-day
+            # cells because those days have not happened yet.
+            end_date = start_date + timedelta(days=max_cohorts - 1)
+
+        cohorts = []
+        cursor = start_date
+        while cursor <= end_date:
+            day = cursor.isoformat()
+            cohorts.append(
+                {
+                    "name": day,
+                    "dimension": "firstSessionDate",
+                    "date_range": {"start_date": day, "end_date": day},
+                }
+            )
+            cursor += timedelta(days=1)
+
+        request: dict[str, Any] = {
+            "property": f"properties/{self.property_id}",
+            "dimensions": [{"name": "cohort"}, {"name": "cohortNthDay"}],
+            "metrics": [{"name": "cohortActiveUsers"}, {"name": "cohortTotalUsers"}],
+            "cohort_spec": {
+                "cohorts": cohorts,
+                "cohorts_range": {
+                    "granularity": "DAILY",
+                    "start_offset": 0,
+                    "end_offset": end_offset,
+                },
+            },
+            "limit": 1000,
+        }
+        dimension_filter = self.dimension_filter(filters)
+        if dimension_filter:
+            request["dimension_filter"] = dimension_filter
+        return self._execute(request)
+
     def _execute(self, request: dict[str, Any]) -> list[dict[str, Any]]:
         cache_key = hashlib.sha256(json.dumps(request, sort_keys=True).encode("utf-8")).hexdigest()
         cached = self.cache.get(cache_key)
@@ -179,7 +270,7 @@ class GA4Service:
         rows: list[dict[str, Any]] = []
         for row in response.rows:
             item: dict[str, Any] = {}
-            item.update(zip(dimension_names, (value.value for value in row.dimension_values)))
+            item.update(zip(dimension_names, (clean_dimension_value(value.value) for value in row.dimension_values)))
             item.update(zip(metric_names, (number(value.value) for value in row.metric_values)))
             rows.append(item)
         self.cache.set(cache_key, rows)

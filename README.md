@@ -1,45 +1,58 @@
 # Sumlink Analytics Dashboard
 
-Full-stack GA4 analytics system for Appsmith and Render:
+Live GA4 analytics dashboard system for Appsmith.
 
-- `node-backend/`: the production TypeScript/Express API required by the dashboard specification
-- `appsmith/`: query, JS Object, filter, widget, chart, and page-build instructions
-- `backend/`: the earlier FastAPI implementation retained as a tested reference
-- `render.yaml`: Render Free Blueprint for the Node service
+- `backend/`: production FastAPI backend connected to GA4 Data API
+- `appsmith/`: Appsmith dashboard export/build files
+- `render.yaml`: Render Blueprint for deploying the FastAPI backend
+- `node-backend/`: older Node prototype kept as reference
 
 GA4 property: `516899630`.
 
-## Production backend
+## Local backend
 
 ```powershell
-cd node-backend
-npm install
+cd backend
+.\.venv\Scripts\Activate.ps1
 $env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\harsh\credentials\phrasal-clover-493807-m9-4019d33cb4de.json"
 $env:GA4_PROPERTY_ID="516899630"
-npm start
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-Local URL: `http://127.0.0.1:8000`. Health and GA4 readiness are available at `/health` and `/ready`.
+Local URL:
 
-The API includes ten dashboard endpoints, common Appsmith filters, GA4 offset pagination, five-minute endpoint caching, strict CORS, rate limiting, Helmet, Pino logging, Zod validation, API-key protection, and base64 service-account credentials for Render.
+```text
+http://127.0.0.1:8000
+```
 
-See:
+Useful checks:
 
-- [Node backend and GA4 setup](node-backend/README.md)
-- [Render deployment](RENDER_DEPLOYMENT.md)
-- [Appsmith dashboard build](appsmith/README.md)
+```text
+/health
+/ready
+```
 
-## Security
+## Production flow
 
-The service-account JSON and local `.env` files are ignored by Git. Render receives the key through the secret `GOOGLE_SERVICE_ACCOUNT_JSON` environment value. Appsmith receives only the public Render URL and an `x-api-key`; it never receives GA4 credentials.
+Appsmith dashboard → Render FastAPI API → GA4 Data API
+
+Do not put the GA4 service-account JSON inside Appsmith. Appsmith should only call the backend API.
+
+## Render deployment
+
+See [RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md).
+
+Render needs:
+
+- `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64`
+- `API_KEYS`
+- `CORS_ORIGINS`
 
 ## Validation
 
-Run:
-
 ```powershell
-cd node-backend
-npm test
+cd backend
+.\.venv\Scripts\pytest.exe
 ```
 
-All endpoints have also been exercised directly against the live GA4 property.
+The backend has been validated against the live GA4 property using the local service-account credential.

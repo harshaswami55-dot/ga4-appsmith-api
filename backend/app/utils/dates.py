@@ -9,6 +9,8 @@ def validate_ga4_date(value: str) -> str:
     value = value.strip()
     if RELATIVE_DATE_PATTERN.fullmatch(value):
         return value
+    if "T" in value:
+        value = value.split("T", 1)[0]
     try:
         date.fromisoformat(value)
     except ValueError as exc:
@@ -25,10 +27,11 @@ def resolve_ga4_date(value: str, *, today: date | None = None) -> date:
     match = re.fullmatch(r"(\d+)daysAgo", value)
     if match:
         return anchor - timedelta(days=int(match.group(1)))
+    if "T" in value:
+        value = value.split("T", 1)[0]
     return date.fromisoformat(value)
 
 
 def thirty_day_window_ending(end_date: str) -> tuple[str, str]:
     end = resolve_ga4_date(end_date)
     return (end - timedelta(days=29)).isoformat(), end.isoformat()
-

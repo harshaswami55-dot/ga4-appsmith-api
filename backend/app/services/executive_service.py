@@ -17,7 +17,7 @@ class ExecutiveService:
         trend = self.ga4.run_report(
             filters=filters,
             dimensions=["date"],
-            metrics=["activeUsers", "newUsers", "sessions", "screenPageViews"],
+            metrics=["activeUsers", "newUsers", "sessions", "screenPageViews", "engagementRate"],
             order_bys=[{"dimension": {"dimension_name": "date"}}],
         )
         dau = trend[-1].get("activeUsers", 0) if trend else 0
@@ -25,6 +25,9 @@ class ExecutiveService:
         mau_filters = filters.model_copy(update={"start_date": mau_start, "end_date": mau_end})
         mau_rows = self.ga4.run_report(filters=mau_filters, metrics=["activeUsers"])
         mau = mau_rows[0].get("activeUsers", 0) if mau_rows else 0
+        for row in trend:
+            row["stickiness_pct"] = percent(row.get("activeUsers", 0), mau)
+            row["engagement_rate_pct"] = round(float(row.get("engagementRate", 0)) * 100, 2)
 
         return {
             "kpis": {
@@ -44,4 +47,3 @@ class ExecutiveService:
                 "stickiness_pct": "DAU divided by MAU, expressed as a percentage",
             },
         }
-
