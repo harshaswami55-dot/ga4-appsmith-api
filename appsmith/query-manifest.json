@@ -1,17 +1,57 @@
 {
   "basePath": "/api",
-  "commonQueryParams": ["startDate", "endDate", "appVersion", "osVersion", "deviceModel", "newReturning"],
+  "commonQueryParams": [
+    "startDate",
+    "endDate",
+    "appVersion",
+    "osVersion",
+    "deviceModel",
+    "newReturning"
+  ],
   "queries": [
-    { "name": "getExecutiveHealth", "path": "/executive-health" },
-    { "name": "getAcquisitionChurn", "path": "/acquisition-churn" },
-    { "name": "getOnboardingFunnel", "path": "/onboarding-funnel" },
-    { "name": "getTutorialFrustration", "path": "/tutorial-frustration" },
-    { "name": "getGameplayBalancing", "path": "/gameplay-balancing" },
-    { "name": "getLevelDifficulty", "path": "/level-difficulty", "additionalParams": ["page", "pageSize"] },
-    { "name": "getRetention", "path": "/retention" },
-    { "name": "getDauMau", "path": "/dau-mau" },
-    { "name": "getTutorialSkip", "path": "/tutorial-skip" },
-    { "name": "getNeverPlayed", "path": "/never-played" }
+    {
+      "name": "getExecutiveHealth",
+      "path": "/executive-health"
+    },
+    {
+      "name": "getAcquisitionChurn",
+      "path": "/acquisition-churn"
+    },
+    {
+      "name": "getOnboardingFunnel",
+      "path": "/onboarding-funnel"
+    },
+    {
+      "name": "getTutorialFrustration",
+      "path": "/tutorial-frustration"
+    },
+    {
+      "name": "getGameplayBalancing",
+      "path": "/gameplay-balancing"
+    },
+    {
+      "name": "getLevelDifficulty",
+      "path": "/level-difficulty",
+      "additionalParams": [
+        "page",
+        "pageSize"
+      ]
+    },
+    {
+      "name": "getRetention",
+      "path": "/retention"
+    },
+    {
+      "name": "getDauMau",
+      "path": "/dau-mau"
+    },
+    {
+      "name": "getTutorialSkip",
+      "path": "/tutorial-skip"
+    },
+    {
+      "name": "getNeverPlayed",
+      "path": "/never-played"
+    }
   ]
 }
-

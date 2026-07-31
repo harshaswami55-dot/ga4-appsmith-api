@@ -22,7 +22,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 Local URL:
 
 ```text
-http://127.0.0.1:8000
+https://sumlink-analytics-api.onrender.com
 ```
 
 Useful checks:
