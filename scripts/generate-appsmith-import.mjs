@@ -2563,7 +2563,35 @@ const app = {
     appLayout: { type: "DESKTOP" },
     new: true,
   },
-  datasourceList: [],
+  pluginList: [
+    {
+      id: "restapi-plugin",
+      name: "REST API",
+      type: "API",
+      packageName: "restapi-plugin",
+    },
+  ],
+  datasourceList: [
+    {
+      name: "SumlinkAPI",
+      pluginId: "restapi-plugin",
+      pluginPackageName: "restapi-plugin",
+      datasourceConfiguration: {
+        url: baseUrl,
+        headers: [
+          {
+            key: "x-api-key",
+            value: "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ=",
+          },
+        ],
+      },
+      invalids: [],
+      isValid: true,
+      isConfigured: true,
+    },
+  ],
+  actionCollectionList: [],
+  customJSLibList: [],
   pageList: built.map((item) => item.page),
   publishedDefaultPageName: "Executive Health",
   unpublishedDefaultPageName: "Executive Health",

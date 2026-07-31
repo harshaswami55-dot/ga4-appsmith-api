@@ -45862,7 +45862,8 @@
         "confirmBeforeExecute": false,
         "userPermissions": [],
         "pluginId": "restapi-plugin",
-        "pluginPackageName": "restapi-plugin"
+        "pluginPackageName": "restapi-plugin",
+        "pluginType": "API"
       },
       "new": false,
       "publishedAction": {
@@ -45980,7 +45981,8 @@
         "confirmBeforeExecute": false,
         "userPermissions": [],
         "pluginId": "restapi-plugin",
-        "pluginPackageName": "restapi-plugin"
+        "pluginPackageName": "restapi-plugin",
+        "pluginType": "API"
       },
       "pluginPackageName": "restapi-plugin"
     },
@@ -46108,7 +46110,8 @@
         "confirmBeforeExecute": false,
         "userPermissions": [],
         "pluginId": "restapi-plugin",
-        "pluginPackageName": "restapi-plugin"
+        "pluginPackageName": "restapi-plugin",
+        "pluginType": "API"
       },
       "new": false,
       "publishedAction": {
@@ -46226,7 +46229,8 @@
         "confirmBeforeExecute": false,
         "userPermissions": [],
         "pluginId": "restapi-plugin",
-        "pluginPackageName": "restapi-plugin"
+        "pluginPackageName": "restapi-plugin",
+        "pluginType": "API"
       },
       "pluginPackageName": "restapi-plugin"
     },
@@ -46354,7 +46358,8 @@
         "confirmBeforeExecute": false,
         "userPermissions": [],
         "pluginId": "restapi-plugin",
-        "pluginPackageName": "restapi-plugin"
+        "pluginPackageName": "restapi-plugin",
+        "pluginType": "API"
       },
       "new": false,
       "publishedAction": {
@@ -46472,7 +46477,8 @@
         "confirmBeforeExecute": false,
         "userPermissions": [],
         "pluginId": "restapi-plugin",
-        "pluginPackageName": "restapi-plugin"
+        "pluginPackageName": "restapi-plugin",
+        "pluginType": "API"
       },
       "pluginPackageName": "restapi-plugin"
     },
@@ -46600,7 +46606,8 @@
         "confirmBeforeExecute": false,
         "userPermissions": [],
         "pluginId": "restapi-plugin",
-        "pluginPackageName": "restapi-plugin"
+        "pluginPackageName": "restapi-plugin",
+        "pluginType": "API"
       },
       "new": false,
       "publishedAction": {
@@ -46718,7 +46725,8 @@
         "confirmBeforeExecute": false,
         "userPermissions": [],
         "pluginId": "restapi-plugin",
-        "pluginPackageName": "restapi-plugin"
+        "pluginPackageName": "restapi-plugin",
+        "pluginType": "API"
       },
       "pluginPackageName": "restapi-plugin"
     },
@@ -46846,7 +46854,8 @@
         "confirmBeforeExecute": false,
         "userPermissions": [],
         "pluginId": "restapi-plugin",
-        "pluginPackageName": "restapi-plugin"
+        "pluginPackageName": "restapi-plugin",
+        "pluginType": "API"
       },
       "new": false,
       "publishedAction": {
@@ -46964,12 +46973,23 @@
         "confirmBeforeExecute": false,
         "userPermissions": [],
         "pluginId": "restapi-plugin",
-        "pluginPackageName": "restapi-plugin"
+        "pluginPackageName": "restapi-plugin",
+        "pluginType": "API"
       },
       "pluginPackageName": "restapi-plugin"
     }
   ],
   "decryptedFields": {},
   "publishedLayoutmongoEscapedWidgets": {},
-  "unpublishedLayoutmongoEscapedWidgets": {}
+  "unpublishedLayoutmongoEscapedWidgets": {},
+  "pluginList": [
+    {
+      "id": "restapi-plugin",
+      "name": "REST API",
+      "type": "API",
+      "packageName": "restapi-plugin"
+    }
+  ],
+  "actionCollectionList": [],
+  "customJSLibList": []
 }
