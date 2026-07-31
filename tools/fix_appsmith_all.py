@@ -29,6 +29,14 @@ ACTION_PAGE_MAP = {
     "RetentionSummary": "Retention",
 }
 
+ACTION_ID_MAP = {
+    "ExecutiveSummary": "64a5df3c2bc8e5f3b81f0451",
+    "AcquisitionSummary": "64a5df3c2bc8e5f3b81f0452",
+    "OnboardingSummary": "64a5df3c2bc8e5f3b81f0453",
+    "GameplaySummary": "64a5df3c2bc8e5f3b81f0454",
+    "RetentionSummary": "64a5df3c2bc8e5f3b81f0455",
+}
+
 ENDPOINT_MAP = {
     "ExecutiveSummary": "/api/v1/executive/summary",
     "AcquisitionSummary": "/api/v1/acquisition/summary",
@@ -62,6 +70,7 @@ def patch_all(filepath):
 
     # 2. Exported Application
     exp_app = data.get("exportedApplication", {})
+    exp_app["userPermissions"] = []
     exp_app["publishedDefaultPageName"] = "Executive Health"
     exp_app["unpublishedDefaultPageName"] = "Executive Health"
     exp_app["publishedDefaultPageId"] = PAGE_ID_MAP["Executive Health"]
@@ -73,6 +82,7 @@ def patch_all(filepath):
             "name": "SumlinkAPI",
             "pluginId": REST_PLUGIN_ID,
             "pluginPackageName": REST_PACKAGE_NAME,
+            "userPermissions": [],
             "datasourceConfiguration": {
                 "url": BASE_URL,
                 "headers": [
@@ -88,7 +98,7 @@ def patch_all(filepath):
         }
     ]
 
-    # 4. Page List with basePageId & IDs
+    # 4. Page List with basePageId & IDs & userPermissions = []
     if "pageList" in data and isinstance(data["pageList"], list):
         for page in data["pageList"]:
             p_name = page.get("unpublishedPage", {}).get("name") or page.get("publishedPage", {}).get("name")
@@ -96,6 +106,7 @@ def patch_all(filepath):
 
             page["id"] = p_id
             page["baseId"] = p_id
+            page["userPermissions"] = []
 
             for p_key in ["unpublishedPage", "publishedPage"]:
                 if p_key in page and isinstance(page[p_key], dict):
@@ -103,29 +114,39 @@ def patch_all(filepath):
                     p_obj["id"] = p_id
                     p_obj["baseId"] = p_id
                     p_obj["basePageId"] = p_id
+                    p_obj["userPermissions"] = []
                     p_obj["isDefault"] = (p_name == "Executive Health")
+                    for layout in p_obj.get("layouts", []):
+                        layout["userPermissions"] = []
 
-    # 5. Action List with endpoints, headers, pluginPackageName, and basePageId
+    # 5. Action List with endpoints, headers, pluginPackageName, basePageId, and action IDs
     if "actionList" in data and isinstance(data["actionList"], list):
         for action in data["actionList"]:
             a_name = action.get("unpublishedAction", {}).get("name") or action.get("publishedAction", {}).get("name") or action.get("name")
+            a_id = ACTION_ID_MAP.get(a_name, "64a5df3c2bc8e5f3b81f0451")
             target_pname = ACTION_PAGE_MAP.get(a_name, "Executive Health")
             target_pid = PAGE_ID_MAP.get(target_pname, "64a5df3c2bc8e5f3b81f0001")
             endpoint = ENDPOINT_MAP.get(a_name, "/api/v1/executive/summary")
             full_url = f"{BASE_URL}{endpoint}"
 
+            action["id"] = a_id
+            action["baseId"] = a_id
             action["pluginId"] = REST_PLUGIN_ID
             action["pluginPackageName"] = REST_PACKAGE_NAME
             action["pluginType"] = "API"
+            action["userPermissions"] = []
 
             for act_key in ["unpublishedAction", "publishedAction"]:
                 if act_key in action and isinstance(action[act_key], dict):
                     act = action[act_key]
+                    act["id"] = a_id
+                    act["baseId"] = a_id
                     act["pluginId"] = REST_PLUGIN_ID
                     act["pluginPackageName"] = REST_PACKAGE_NAME
                     act["pluginType"] = "API"
                     act["pageId"] = target_pname
                     act["basePageId"] = target_pid
+                    act["userPermissions"] = []
 
                     if "actionConfiguration" not in act:
                         act["actionConfiguration"] = {}
@@ -140,6 +161,7 @@ def patch_all(filepath):
                         ds["pluginId"] = REST_PLUGIN_ID
                         ds["pluginPackageName"] = REST_PACKAGE_NAME
                         ds["name"] = "SumlinkAPI"
+                        ds["userPermissions"] = []
                         ds["datasourceConfiguration"] = {
                             "url": BASE_URL,
                             "headers": [
@@ -149,6 +171,19 @@ def patch_all(filepath):
                                 }
                             ]
                         }
+
+    # 6. Clear userPermissions recursively
+    def clear_perms(node):
+        if isinstance(node, dict):
+            if "userPermissions" in node:
+                node["userPermissions"] = []
+            for v in node.values():
+                clear_perms(v)
+        elif isinstance(node, list):
+            for item in node:
+                clear_perms(item)
+
+    clear_perms(data)
 
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)

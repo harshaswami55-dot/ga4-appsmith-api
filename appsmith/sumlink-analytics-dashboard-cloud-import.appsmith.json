@@ -3,13 +3,7 @@
   "fileFormatVersion": 1,
   "serverSchemaVersion": 5,
   "exportedApplication": {
-    "userPermissions": [
-      "manage:applications",
-      "export:applications",
-      "read:applications",
-      "publish:applications",
-      "makePublic:applications"
-    ],
+    "userPermissions": [],
     "name": "Sumlink Analytics Dashboard",
     "isPublic": false,
     "appIsExample": false,
@@ -30,6 +24,7 @@
       "name": "SumlinkAPI",
       "pluginId": "restapi-plugin",
       "pluginPackageName": "restapi-plugin",
+      "userPermissions": [],
       "datasourceConfiguration": {
         "url": "https://sumlink-analytics-api.onrender.com",
         "headers": [
@@ -46,10 +41,7 @@
   ],
   "pageList": [
     {
-      "userPermissions": [
-        "read:pages",
-        "manage:pages"
-      ],
+      "userPermissions": [],
       "unpublishedPage": {
         "name": "Executive Health",
         "slug": "executive-health",
@@ -6051,10 +6043,7 @@
       "baseId": "64a5df3c2bc8e5f3b81f0001"
     },
     {
-      "userPermissions": [
-        "read:pages",
-        "manage:pages"
-      ],
+      "userPermissions": [],
       "unpublishedPage": {
         "name": "Acquisition",
         "slug": "acquisition",
@@ -12050,10 +12039,7 @@
       "baseId": "64a5df3c2bc8e5f3b81f0002"
     },
     {
-      "userPermissions": [
-        "read:pages",
-        "manage:pages"
-      ],
+      "userPermissions": [],
       "unpublishedPage": {
         "name": "Onboarding",
         "slug": "onboarding",
@@ -21057,10 +21043,7 @@
       "baseId": "64a5df3c2bc8e5f3b81f0003"
     },
     {
-      "userPermissions": [
-        "read:pages",
-        "manage:pages"
-      ],
+      "userPermissions": [],
       "unpublishedPage": {
         "name": "Gameplay",
         "slug": "gameplay",
@@ -25682,10 +25665,7 @@
       "baseId": "64a5df3c2bc8e5f3b81f0004"
     },
     {
-      "userPermissions": [
-        "read:pages",
-        "manage:pages"
-      ],
+      "userPermissions": [],
       "unpublishedPage": {
         "name": "Retention",
         "slug": "retention",
@@ -45794,11 +45774,7 @@
   "actionList": [
     {
       "id": "64a5df3c2bc8e5f3b81f0451",
-      "userPermissions": [
-        "read:actions",
-        "execute:actions",
-        "manage:actions"
-      ],
+      "userPermissions": [],
       "pluginType": "API",
       "pluginId": "restapi-plugin",
       "unpublishedAction": {
@@ -45918,7 +45894,9 @@
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
         "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0001"
+        "basePageId": "64a5df3c2bc8e5f3b81f0001",
+        "id": "64a5df3c2bc8e5f3b81f0451",
+        "baseId": "64a5df3c2bc8e5f3b81f0451"
       },
       "new": false,
       "publishedAction": {
@@ -46038,17 +46016,16 @@
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
         "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0001"
+        "basePageId": "64a5df3c2bc8e5f3b81f0001",
+        "id": "64a5df3c2bc8e5f3b81f0451",
+        "baseId": "64a5df3c2bc8e5f3b81f0451"
       },
-      "pluginPackageName": "restapi-plugin"
+      "pluginPackageName": "restapi-plugin",
+      "baseId": "64a5df3c2bc8e5f3b81f0451"
     },
     {
-      "id": "64a5df3c2bc8e5f3b81f04ba",
-      "userPermissions": [
-        "read:actions",
-        "execute:actions",
-        "manage:actions"
-      ],
+      "id": "64a5df3c2bc8e5f3b81f0452",
+      "userPermissions": [],
       "pluginType": "API",
       "pluginId": "restapi-plugin",
       "unpublishedAction": {
@@ -46168,7 +46145,9 @@
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
         "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0002"
+        "basePageId": "64a5df3c2bc8e5f3b81f0002",
+        "id": "64a5df3c2bc8e5f3b81f0452",
+        "baseId": "64a5df3c2bc8e5f3b81f0452"
       },
       "new": false,
       "publishedAction": {
@@ -46288,17 +46267,16 @@
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
         "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0002"
+        "basePageId": "64a5df3c2bc8e5f3b81f0002",
+        "id": "64a5df3c2bc8e5f3b81f0452",
+        "baseId": "64a5df3c2bc8e5f3b81f0452"
       },
-      "pluginPackageName": "restapi-plugin"
+      "pluginPackageName": "restapi-plugin",
+      "baseId": "64a5df3c2bc8e5f3b81f0452"
     },
     {
-      "id": "64a5df3c2bc8e5f3b81f0554",
-      "userPermissions": [
-        "read:actions",
-        "execute:actions",
-        "manage:actions"
-      ],
+      "id": "64a5df3c2bc8e5f3b81f0453",
+      "userPermissions": [],
       "pluginType": "API",
       "pluginId": "restapi-plugin",
       "unpublishedAction": {
@@ -46418,7 +46396,9 @@
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
         "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0003"
+        "basePageId": "64a5df3c2bc8e5f3b81f0003",
+        "id": "64a5df3c2bc8e5f3b81f0453",
+        "baseId": "64a5df3c2bc8e5f3b81f0453"
       },
       "new": false,
       "publishedAction": {
@@ -46538,17 +46518,16 @@
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
         "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0003"
+        "basePageId": "64a5df3c2bc8e5f3b81f0003",
+        "id": "64a5df3c2bc8e5f3b81f0453",
+        "baseId": "64a5df3c2bc8e5f3b81f0453"
       },
-      "pluginPackageName": "restapi-plugin"
+      "pluginPackageName": "restapi-plugin",
+      "baseId": "64a5df3c2bc8e5f3b81f0453"
     },
     {
-      "id": "64a5df3c2bc8e5f3b81f05a5",
-      "userPermissions": [
-        "read:actions",
-        "execute:actions",
-        "manage:actions"
-      ],
+      "id": "64a5df3c2bc8e5f3b81f0454",
+      "userPermissions": [],
       "pluginType": "API",
       "pluginId": "restapi-plugin",
       "unpublishedAction": {
@@ -46668,7 +46647,9 @@
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
         "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0004"
+        "basePageId": "64a5df3c2bc8e5f3b81f0004",
+        "id": "64a5df3c2bc8e5f3b81f0454",
+        "baseId": "64a5df3c2bc8e5f3b81f0454"
       },
       "new": false,
       "publishedAction": {
@@ -46788,17 +46769,16 @@
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
         "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0004"
+        "basePageId": "64a5df3c2bc8e5f3b81f0004",
+        "id": "64a5df3c2bc8e5f3b81f0454",
+        "baseId": "64a5df3c2bc8e5f3b81f0454"
       },
-      "pluginPackageName": "restapi-plugin"
+      "pluginPackageName": "restapi-plugin",
+      "baseId": "64a5df3c2bc8e5f3b81f0454"
     },
     {
-      "id": "64a5df3c2bc8e5f3b81f06d8",
-      "userPermissions": [
-        "read:actions",
-        "execute:actions",
-        "manage:actions"
-      ],
+      "id": "64a5df3c2bc8e5f3b81f0455",
+      "userPermissions": [],
       "pluginType": "API",
       "pluginId": "restapi-plugin",
       "unpublishedAction": {
@@ -46918,7 +46898,9 @@
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
         "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0005"
+        "basePageId": "64a5df3c2bc8e5f3b81f0005",
+        "id": "64a5df3c2bc8e5f3b81f0455",
+        "baseId": "64a5df3c2bc8e5f3b81f0455"
       },
       "new": false,
       "publishedAction": {
@@ -47038,9 +47020,12 @@
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
         "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0005"
+        "basePageId": "64a5df3c2bc8e5f3b81f0005",
+        "id": "64a5df3c2bc8e5f3b81f0455",
+        "baseId": "64a5df3c2bc8e5f3b81f0455"
       },
-      "pluginPackageName": "restapi-plugin"
+      "pluginPackageName": "restapi-plugin",
+      "baseId": "64a5df3c2bc8e5f3b81f0455"
     }
   ],
   "decryptedFields": {},
