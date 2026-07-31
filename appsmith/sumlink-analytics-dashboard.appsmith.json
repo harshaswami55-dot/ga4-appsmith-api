@@ -15,40 +15,9 @@
     },
     "new": true,
     "publishedDefaultPageName": "Executive Health",
-    "unpublishedDefaultPageName": "Executive Health",
-    "publishedDefaultPageId": "64a5df3c2bc8e5f3b81f0001",
-    "unpublishedDefaultPageId": "64a5df3c2bc8e5f3b81f0001"
+    "unpublishedDefaultPageName": "Executive Health"
   },
-  "pluginList": [
-    {
-      "id": "restapi-plugin",
-      "name": "REST API",
-      "type": "API",
-      "packageName": "restapi-plugin"
-    }
-  ],
-  "datasourceList": [
-    {
-      "name": "SumlinkAPI",
-      "pluginId": "restapi-plugin",
-      "pluginPackageName": "restapi-plugin",
-      "userPermissions": [],
-      "datasourceConfiguration": {
-        "url": "https://sumlink-analytics-api.onrender.com",
-        "headers": [
-          {
-            "key": "x-api-key",
-            "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-          }
-        ]
-      },
-      "invalids": [],
-      "isValid": true,
-      "isConfigured": true
-    }
-  ],
-  "actionCollectionList": [],
-  "customJSLibList": [],
+  "datasourceList": [],
   "pageList": [
     {
       "userPermissions": [],
@@ -3044,11 +3013,7 @@
             "new": false
           }
         ],
-        "userPermissions": [],
-        "id": "64a5df3c2bc8e5f3b81f0001",
-        "baseId": "64a5df3c2bc8e5f3b81f0001",
-        "basePageId": "64a5df3c2bc8e5f3b81f0001",
-        "isDefault": true
+        "userPermissions": []
       },
       "publishedPage": {
         "name": "Executive Health",
@@ -6042,15 +6007,9 @@
             "new": false
           }
         ],
-        "userPermissions": [],
-        "id": "64a5df3c2bc8e5f3b81f0001",
-        "baseId": "64a5df3c2bc8e5f3b81f0001",
-        "basePageId": "64a5df3c2bc8e5f3b81f0001",
-        "isDefault": true
+        "userPermissions": []
       },
-      "new": true,
-      "id": "64a5df3c2bc8e5f3b81f0001",
-      "baseId": "64a5df3c2bc8e5f3b81f0001"
+      "new": true
     },
     {
       "userPermissions": [],
@@ -9043,11 +9002,7 @@
             "new": false
           }
         ],
-        "userPermissions": [],
-        "id": "64a5df3c2bc8e5f3b81f0002",
-        "baseId": "64a5df3c2bc8e5f3b81f0002",
-        "basePageId": "64a5df3c2bc8e5f3b81f0002",
-        "isDefault": false
+        "userPermissions": []
       },
       "publishedPage": {
         "name": "Acquisition",
@@ -12038,15 +11993,9 @@
             "new": false
           }
         ],
-        "userPermissions": [],
-        "id": "64a5df3c2bc8e5f3b81f0002",
-        "baseId": "64a5df3c2bc8e5f3b81f0002",
-        "basePageId": "64a5df3c2bc8e5f3b81f0002",
-        "isDefault": false
+        "userPermissions": []
       },
-      "new": true,
-      "id": "64a5df3c2bc8e5f3b81f0002",
-      "baseId": "64a5df3c2bc8e5f3b81f0002"
+      "new": true
     },
     {
       "userPermissions": [],
@@ -16543,11 +16492,7 @@
             "new": false
           }
         ],
-        "userPermissions": [],
-        "id": "64a5df3c2bc8e5f3b81f0003",
-        "baseId": "64a5df3c2bc8e5f3b81f0003",
-        "basePageId": "64a5df3c2bc8e5f3b81f0003",
-        "isDefault": false
+        "userPermissions": []
       },
       "publishedPage": {
         "name": "Onboarding",
@@ -21042,15 +20987,9 @@
             "new": false
           }
         ],
-        "userPermissions": [],
-        "id": "64a5df3c2bc8e5f3b81f0003",
-        "baseId": "64a5df3c2bc8e5f3b81f0003",
-        "basePageId": "64a5df3c2bc8e5f3b81f0003",
-        "isDefault": false
+        "userPermissions": []
       },
-      "new": true,
-      "id": "64a5df3c2bc8e5f3b81f0003",
-      "baseId": "64a5df3c2bc8e5f3b81f0003"
+      "new": true
     },
     {
       "userPermissions": [],
@@ -23356,11 +23295,7 @@
             "new": false
           }
         ],
-        "userPermissions": [],
-        "id": "64a5df3c2bc8e5f3b81f0004",
-        "baseId": "64a5df3c2bc8e5f3b81f0004",
-        "basePageId": "64a5df3c2bc8e5f3b81f0004",
-        "isDefault": false
+        "userPermissions": []
       },
       "publishedPage": {
         "name": "Gameplay",
@@ -25664,15 +25599,9 @@
             "new": false
           }
         ],
-        "userPermissions": [],
-        "id": "64a5df3c2bc8e5f3b81f0004",
-        "baseId": "64a5df3c2bc8e5f3b81f0004",
-        "basePageId": "64a5df3c2bc8e5f3b81f0004",
-        "isDefault": false
+        "userPermissions": []
       },
-      "new": true,
-      "id": "64a5df3c2bc8e5f3b81f0004",
-      "baseId": "64a5df3c2bc8e5f3b81f0004"
+      "new": true
     },
     {
       "userPermissions": [],
@@ -35719,11 +35648,7 @@
             "new": false
           }
         ],
-        "userPermissions": [],
-        "id": "64a5df3c2bc8e5f3b81f0005",
-        "baseId": "64a5df3c2bc8e5f3b81f0005",
-        "basePageId": "64a5df3c2bc8e5f3b81f0005",
-        "isDefault": false
+        "userPermissions": []
       },
       "publishedPage": {
         "name": "Retention",
@@ -45768,15 +45693,9 @@
             "new": false
           }
         ],
-        "userPermissions": [],
-        "id": "64a5df3c2bc8e5f3b81f0005",
-        "baseId": "64a5df3c2bc8e5f3b81f0005",
-        "basePageId": "64a5df3c2bc8e5f3b81f0005",
-        "isDefault": false
+        "userPermissions": []
       },
-      "new": true,
-      "id": "64a5df3c2bc8e5f3b81f0005",
-      "baseId": "64a5df3c2bc8e5f3b81f0005"
+      "new": true
     }
   ],
   "publishedDefaultPageName": "Executive Health",
@@ -45794,13 +45713,7 @@
           "name": "SumlinkAPI",
           "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
-            "url": "https://sumlink-analytics-api.onrender.com",
-            "headers": [
-              {
-                "key": "x-api-key",
-                "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-              }
-            ]
+            "url": "https://sumlink-analytics-api.onrender.com"
           },
           "invalids": [],
           "isValid": true,
@@ -45811,13 +45724,8 @@
         "actionConfiguration": {
           "timeoutInMillisecond": 60000,
           "paginationType": "NONE",
-          "path": "/api/v1/executive/summary",
-          "headers": [
-            {
-              "key": "x-api-key",
-              "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-            }
-          ],
+          "path": "https://sumlink-analytics-api.onrender.com/api/executive-health",
+          "headers": [],
           "autoGeneratedHeaders": [],
           "bodyFormData": [],
           "encodeParamsToggle": true,
@@ -45855,14 +45763,15 @@
           "formData": {
             "apiContentType": "none"
           },
-          "httpMethod": "GET",
+          "httpMethod": {
+            "name": "GET"
+          },
           "httpVersion": "HTTP11",
           "pluginSpecifiedTemplates": [
             {
               "value": true
             }
-          ],
-          "url": "https://sumlink-analytics-api.onrender.com/api/v1/executive/summary"
+          ]
         },
         "executeOnLoad": true,
         "dynamicBindingPathList": [
@@ -45903,10 +45812,7 @@
         "userPermissions": [],
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
-        "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0001",
-        "id": "64a5df3c2bc8e5f3b81f0451",
-        "baseId": "64a5df3c2bc8e5f3b81f0451"
+        "pluginType": "API"
       },
       "new": false,
       "publishedAction": {
@@ -45916,13 +45822,7 @@
           "name": "SumlinkAPI",
           "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
-            "url": "https://sumlink-analytics-api.onrender.com",
-            "headers": [
-              {
-                "key": "x-api-key",
-                "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-              }
-            ]
+            "url": "https://sumlink-analytics-api.onrender.com"
           },
           "invalids": [],
           "isValid": true,
@@ -45933,13 +45833,8 @@
         "actionConfiguration": {
           "timeoutInMillisecond": 60000,
           "paginationType": "NONE",
-          "path": "/api/v1/executive/summary",
-          "headers": [
-            {
-              "key": "x-api-key",
-              "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-            }
-          ],
+          "path": "https://sumlink-analytics-api.onrender.com/api/executive-health",
+          "headers": [],
           "autoGeneratedHeaders": [],
           "bodyFormData": [],
           "encodeParamsToggle": true,
@@ -45977,14 +45872,15 @@
           "formData": {
             "apiContentType": "none"
           },
-          "httpMethod": "GET",
+          "httpMethod": {
+            "name": "GET"
+          },
           "httpVersion": "HTTP11",
           "pluginSpecifiedTemplates": [
             {
               "value": true
             }
-          ],
-          "url": "https://sumlink-analytics-api.onrender.com/api/v1/executive/summary"
+          ]
         },
         "executeOnLoad": true,
         "dynamicBindingPathList": [
@@ -46025,16 +45921,12 @@
         "userPermissions": [],
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
-        "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0001",
-        "id": "64a5df3c2bc8e5f3b81f0451",
-        "baseId": "64a5df3c2bc8e5f3b81f0451"
+        "pluginType": "API"
       },
-      "pluginPackageName": "restapi-plugin",
-      "baseId": "64a5df3c2bc8e5f3b81f0451"
+      "pluginPackageName": "restapi-plugin"
     },
     {
-      "id": "64a5df3c2bc8e5f3b81f0452",
+      "id": "64a5df3c2bc8e5f3b81f04ba",
       "userPermissions": [],
       "pluginType": "API",
       "pluginId": "restapi-plugin",
@@ -46045,13 +45937,7 @@
           "name": "SumlinkAPI",
           "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
-            "url": "https://sumlink-analytics-api.onrender.com",
-            "headers": [
-              {
-                "key": "x-api-key",
-                "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-              }
-            ]
+            "url": "https://sumlink-analytics-api.onrender.com"
           },
           "invalids": [],
           "isValid": true,
@@ -46062,13 +45948,8 @@
         "actionConfiguration": {
           "timeoutInMillisecond": 60000,
           "paginationType": "NONE",
-          "path": "/api/v1/acquisition/summary",
-          "headers": [
-            {
-              "key": "x-api-key",
-              "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-            }
-          ],
+          "path": "https://sumlink-analytics-api.onrender.com/api/acquisition-churn",
+          "headers": [],
           "autoGeneratedHeaders": [],
           "bodyFormData": [],
           "encodeParamsToggle": true,
@@ -46106,14 +45987,15 @@
           "formData": {
             "apiContentType": "none"
           },
-          "httpMethod": "GET",
+          "httpMethod": {
+            "name": "GET"
+          },
           "httpVersion": "HTTP11",
           "pluginSpecifiedTemplates": [
             {
               "value": true
             }
-          ],
-          "url": "https://sumlink-analytics-api.onrender.com/api/v1/acquisition/summary"
+          ]
         },
         "executeOnLoad": true,
         "dynamicBindingPathList": [
@@ -46154,10 +46036,7 @@
         "userPermissions": [],
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
-        "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0002",
-        "id": "64a5df3c2bc8e5f3b81f0452",
-        "baseId": "64a5df3c2bc8e5f3b81f0452"
+        "pluginType": "API"
       },
       "new": false,
       "publishedAction": {
@@ -46167,13 +46046,7 @@
           "name": "SumlinkAPI",
           "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
-            "url": "https://sumlink-analytics-api.onrender.com",
-            "headers": [
-              {
-                "key": "x-api-key",
-                "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-              }
-            ]
+            "url": "https://sumlink-analytics-api.onrender.com"
           },
           "invalids": [],
           "isValid": true,
@@ -46184,13 +46057,8 @@
         "actionConfiguration": {
           "timeoutInMillisecond": 60000,
           "paginationType": "NONE",
-          "path": "/api/v1/acquisition/summary",
-          "headers": [
-            {
-              "key": "x-api-key",
-              "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-            }
-          ],
+          "path": "https://sumlink-analytics-api.onrender.com/api/acquisition-churn",
+          "headers": [],
           "autoGeneratedHeaders": [],
           "bodyFormData": [],
           "encodeParamsToggle": true,
@@ -46228,14 +46096,15 @@
           "formData": {
             "apiContentType": "none"
           },
-          "httpMethod": "GET",
+          "httpMethod": {
+            "name": "GET"
+          },
           "httpVersion": "HTTP11",
           "pluginSpecifiedTemplates": [
             {
               "value": true
             }
-          ],
-          "url": "https://sumlink-analytics-api.onrender.com/api/v1/acquisition/summary"
+          ]
         },
         "executeOnLoad": true,
         "dynamicBindingPathList": [
@@ -46276,16 +46145,12 @@
         "userPermissions": [],
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
-        "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0002",
-        "id": "64a5df3c2bc8e5f3b81f0452",
-        "baseId": "64a5df3c2bc8e5f3b81f0452"
+        "pluginType": "API"
       },
-      "pluginPackageName": "restapi-plugin",
-      "baseId": "64a5df3c2bc8e5f3b81f0452"
+      "pluginPackageName": "restapi-plugin"
     },
     {
-      "id": "64a5df3c2bc8e5f3b81f0453",
+      "id": "64a5df3c2bc8e5f3b81f0554",
       "userPermissions": [],
       "pluginType": "API",
       "pluginId": "restapi-plugin",
@@ -46296,13 +46161,7 @@
           "name": "SumlinkAPI",
           "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
-            "url": "https://sumlink-analytics-api.onrender.com",
-            "headers": [
-              {
-                "key": "x-api-key",
-                "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-              }
-            ]
+            "url": "https://sumlink-analytics-api.onrender.com"
           },
           "invalids": [],
           "isValid": true,
@@ -46313,13 +46172,8 @@
         "actionConfiguration": {
           "timeoutInMillisecond": 60000,
           "paginationType": "NONE",
-          "path": "/api/v1/onboarding/summary",
-          "headers": [
-            {
-              "key": "x-api-key",
-              "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-            }
-          ],
+          "path": "https://sumlink-analytics-api.onrender.com/api/onboarding-funnel",
+          "headers": [],
           "autoGeneratedHeaders": [],
           "bodyFormData": [],
           "encodeParamsToggle": true,
@@ -46357,14 +46211,15 @@
           "formData": {
             "apiContentType": "none"
           },
-          "httpMethod": "GET",
+          "httpMethod": {
+            "name": "GET"
+          },
           "httpVersion": "HTTP11",
           "pluginSpecifiedTemplates": [
             {
               "value": true
             }
-          ],
-          "url": "https://sumlink-analytics-api.onrender.com/api/v1/onboarding/summary"
+          ]
         },
         "executeOnLoad": true,
         "dynamicBindingPathList": [
@@ -46405,10 +46260,7 @@
         "userPermissions": [],
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
-        "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0003",
-        "id": "64a5df3c2bc8e5f3b81f0453",
-        "baseId": "64a5df3c2bc8e5f3b81f0453"
+        "pluginType": "API"
       },
       "new": false,
       "publishedAction": {
@@ -46418,13 +46270,7 @@
           "name": "SumlinkAPI",
           "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
-            "url": "https://sumlink-analytics-api.onrender.com",
-            "headers": [
-              {
-                "key": "x-api-key",
-                "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-              }
-            ]
+            "url": "https://sumlink-analytics-api.onrender.com"
           },
           "invalids": [],
           "isValid": true,
@@ -46435,13 +46281,8 @@
         "actionConfiguration": {
           "timeoutInMillisecond": 60000,
           "paginationType": "NONE",
-          "path": "/api/v1/onboarding/summary",
-          "headers": [
-            {
-              "key": "x-api-key",
-              "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-            }
-          ],
+          "path": "https://sumlink-analytics-api.onrender.com/api/onboarding-funnel",
+          "headers": [],
           "autoGeneratedHeaders": [],
           "bodyFormData": [],
           "encodeParamsToggle": true,
@@ -46479,14 +46320,15 @@
           "formData": {
             "apiContentType": "none"
           },
-          "httpMethod": "GET",
+          "httpMethod": {
+            "name": "GET"
+          },
           "httpVersion": "HTTP11",
           "pluginSpecifiedTemplates": [
             {
               "value": true
             }
-          ],
-          "url": "https://sumlink-analytics-api.onrender.com/api/v1/onboarding/summary"
+          ]
         },
         "executeOnLoad": true,
         "dynamicBindingPathList": [
@@ -46527,16 +46369,12 @@
         "userPermissions": [],
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
-        "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0003",
-        "id": "64a5df3c2bc8e5f3b81f0453",
-        "baseId": "64a5df3c2bc8e5f3b81f0453"
+        "pluginType": "API"
       },
-      "pluginPackageName": "restapi-plugin",
-      "baseId": "64a5df3c2bc8e5f3b81f0453"
+      "pluginPackageName": "restapi-plugin"
     },
     {
-      "id": "64a5df3c2bc8e5f3b81f0454",
+      "id": "64a5df3c2bc8e5f3b81f05a5",
       "userPermissions": [],
       "pluginType": "API",
       "pluginId": "restapi-plugin",
@@ -46547,13 +46385,7 @@
           "name": "SumlinkAPI",
           "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
-            "url": "https://sumlink-analytics-api.onrender.com",
-            "headers": [
-              {
-                "key": "x-api-key",
-                "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-              }
-            ]
+            "url": "https://sumlink-analytics-api.onrender.com"
           },
           "invalids": [],
           "isValid": true,
@@ -46564,13 +46396,8 @@
         "actionConfiguration": {
           "timeoutInMillisecond": 60000,
           "paginationType": "NONE",
-          "path": "/api/v1/gameplay/summary",
-          "headers": [
-            {
-              "key": "x-api-key",
-              "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-            }
-          ],
+          "path": "https://sumlink-analytics-api.onrender.com/api/gameplay-balancing",
+          "headers": [],
           "autoGeneratedHeaders": [],
           "bodyFormData": [],
           "encodeParamsToggle": true,
@@ -46608,14 +46435,15 @@
           "formData": {
             "apiContentType": "none"
           },
-          "httpMethod": "GET",
+          "httpMethod": {
+            "name": "GET"
+          },
           "httpVersion": "HTTP11",
           "pluginSpecifiedTemplates": [
             {
               "value": true
             }
-          ],
-          "url": "https://sumlink-analytics-api.onrender.com/api/v1/gameplay/summary"
+          ]
         },
         "executeOnLoad": true,
         "dynamicBindingPathList": [
@@ -46656,10 +46484,7 @@
         "userPermissions": [],
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
-        "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0004",
-        "id": "64a5df3c2bc8e5f3b81f0454",
-        "baseId": "64a5df3c2bc8e5f3b81f0454"
+        "pluginType": "API"
       },
       "new": false,
       "publishedAction": {
@@ -46669,13 +46494,7 @@
           "name": "SumlinkAPI",
           "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
-            "url": "https://sumlink-analytics-api.onrender.com",
-            "headers": [
-              {
-                "key": "x-api-key",
-                "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-              }
-            ]
+            "url": "https://sumlink-analytics-api.onrender.com"
           },
           "invalids": [],
           "isValid": true,
@@ -46686,13 +46505,8 @@
         "actionConfiguration": {
           "timeoutInMillisecond": 60000,
           "paginationType": "NONE",
-          "path": "/api/v1/gameplay/summary",
-          "headers": [
-            {
-              "key": "x-api-key",
-              "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-            }
-          ],
+          "path": "https://sumlink-analytics-api.onrender.com/api/gameplay-balancing",
+          "headers": [],
           "autoGeneratedHeaders": [],
           "bodyFormData": [],
           "encodeParamsToggle": true,
@@ -46730,14 +46544,15 @@
           "formData": {
             "apiContentType": "none"
           },
-          "httpMethod": "GET",
+          "httpMethod": {
+            "name": "GET"
+          },
           "httpVersion": "HTTP11",
           "pluginSpecifiedTemplates": [
             {
               "value": true
             }
-          ],
-          "url": "https://sumlink-analytics-api.onrender.com/api/v1/gameplay/summary"
+          ]
         },
         "executeOnLoad": true,
         "dynamicBindingPathList": [
@@ -46778,16 +46593,12 @@
         "userPermissions": [],
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
-        "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0004",
-        "id": "64a5df3c2bc8e5f3b81f0454",
-        "baseId": "64a5df3c2bc8e5f3b81f0454"
+        "pluginType": "API"
       },
-      "pluginPackageName": "restapi-plugin",
-      "baseId": "64a5df3c2bc8e5f3b81f0454"
+      "pluginPackageName": "restapi-plugin"
     },
     {
-      "id": "64a5df3c2bc8e5f3b81f0455",
+      "id": "64a5df3c2bc8e5f3b81f06d8",
       "userPermissions": [],
       "pluginType": "API",
       "pluginId": "restapi-plugin",
@@ -46798,13 +46609,7 @@
           "name": "SumlinkAPI",
           "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
-            "url": "https://sumlink-analytics-api.onrender.com",
-            "headers": [
-              {
-                "key": "x-api-key",
-                "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-              }
-            ]
+            "url": "https://sumlink-analytics-api.onrender.com"
           },
           "invalids": [],
           "isValid": true,
@@ -46815,13 +46620,8 @@
         "actionConfiguration": {
           "timeoutInMillisecond": 60000,
           "paginationType": "NONE",
-          "path": "/api/v1/retention/summary",
-          "headers": [
-            {
-              "key": "x-api-key",
-              "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-            }
-          ],
+          "path": "https://sumlink-analytics-api.onrender.com/api/retention",
+          "headers": [],
           "autoGeneratedHeaders": [],
           "bodyFormData": [],
           "encodeParamsToggle": true,
@@ -46859,14 +46659,15 @@
           "formData": {
             "apiContentType": "none"
           },
-          "httpMethod": "GET",
+          "httpMethod": {
+            "name": "GET"
+          },
           "httpVersion": "HTTP11",
           "pluginSpecifiedTemplates": [
             {
               "value": true
             }
-          ],
-          "url": "https://sumlink-analytics-api.onrender.com/api/v1/retention/summary"
+          ]
         },
         "executeOnLoad": true,
         "dynamicBindingPathList": [
@@ -46907,10 +46708,7 @@
         "userPermissions": [],
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
-        "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0005",
-        "id": "64a5df3c2bc8e5f3b81f0455",
-        "baseId": "64a5df3c2bc8e5f3b81f0455"
+        "pluginType": "API"
       },
       "new": false,
       "publishedAction": {
@@ -46920,13 +46718,7 @@
           "name": "SumlinkAPI",
           "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
-            "url": "https://sumlink-analytics-api.onrender.com",
-            "headers": [
-              {
-                "key": "x-api-key",
-                "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-              }
-            ]
+            "url": "https://sumlink-analytics-api.onrender.com"
           },
           "invalids": [],
           "isValid": true,
@@ -46937,13 +46729,8 @@
         "actionConfiguration": {
           "timeoutInMillisecond": 60000,
           "paginationType": "NONE",
-          "path": "/api/v1/retention/summary",
-          "headers": [
-            {
-              "key": "x-api-key",
-              "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
-            }
-          ],
+          "path": "https://sumlink-analytics-api.onrender.com/api/retention",
+          "headers": [],
           "autoGeneratedHeaders": [],
           "bodyFormData": [],
           "encodeParamsToggle": true,
@@ -46981,14 +46768,15 @@
           "formData": {
             "apiContentType": "none"
           },
-          "httpMethod": "GET",
+          "httpMethod": {
+            "name": "GET"
+          },
           "httpVersion": "HTTP11",
           "pluginSpecifiedTemplates": [
             {
               "value": true
             }
-          ],
-          "url": "https://sumlink-analytics-api.onrender.com/api/v1/retention/summary"
+          ]
         },
         "executeOnLoad": true,
         "dynamicBindingPathList": [
@@ -47029,16 +46817,20 @@
         "userPermissions": [],
         "pluginId": "restapi-plugin",
         "pluginPackageName": "restapi-plugin",
-        "pluginType": "API",
-        "basePageId": "64a5df3c2bc8e5f3b81f0005",
-        "id": "64a5df3c2bc8e5f3b81f0455",
-        "baseId": "64a5df3c2bc8e5f3b81f0455"
+        "pluginType": "API"
       },
-      "pluginPackageName": "restapi-plugin",
-      "baseId": "64a5df3c2bc8e5f3b81f0455"
+      "pluginPackageName": "restapi-plugin"
     }
   ],
   "decryptedFields": {},
   "publishedLayoutmongoEscapedWidgets": {},
-  "unpublishedLayoutmongoEscapedWidgets": {}
+  "unpublishedLayoutmongoEscapedWidgets": {},
+  "pluginList": [
+    {
+      "id": "restapi-plugin",
+      "name": "restapi-plugin",
+      "type": "API",
+      "packageName": "restapi-plugin"
+    }
+  ]
 }
