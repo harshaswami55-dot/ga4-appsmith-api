@@ -1,6 +1,7 @@
 import re
 
 from app.schemas.filters import DashboardFilters
+from app.services.bigquery_retention_service import BigQueryRetentionService
 from app.services.ga4_service import GA4Service, _exact_filter
 from app.utils.numbers import percent
 
@@ -12,8 +13,9 @@ class RetentionService:
     COHORT_SUMMARY_MAX_COHORTS = 31
     COHORT_VISIBLE_ROWS = 10
 
-    def __init__(self, ga4: GA4Service):
+    def __init__(self, ga4: GA4Service, bigquery_retention: BigQueryRetentionService | None = None):
         self.ga4 = ga4
+        self.bigquery_retention = bigquery_retention or BigQueryRetentionService(ga4.settings)
 
     def dashboard(self, filters: DashboardFilters) -> dict:
         daily_activity = self.ga4.run_report(
@@ -52,6 +54,15 @@ class RetentionService:
         day_0_users = cohort_users_by_day.get(0, 0)
         cohort_grid_rows, cohort_internal_rows = self._cohort_grid(filters, include_internal=True)
         rolling_retention_rows = self._rolling_retention_table(cohort_internal_rows)
+        rolling_retention_source = "GA4 lower-bound estimate"
+        if self.bigquery_retention.enabled:
+            try:
+                bq_rolling_retention_rows = self.bigquery_retention.rolling_retention_table(filters)
+                if bq_rolling_retention_rows:
+                    rolling_retention_rows = bq_rolling_retention_rows
+                    rolling_retention_source = "BigQuery exact user-level"
+            except Exception:
+                rolling_retention_source = "GA4 lower-bound estimate; BigQuery unavailable"
         retention_table = [
             {
                 "cohort": "Selected Day 0 cohort",
@@ -113,14 +124,14 @@ class RetentionService:
                 "cohort": "Day 0 cohort users are users whose first gameplay/app session occurred in the selected date range. GA4 Data API cohort dimension used: firstSessionDate.",
                 "retention": "Day 0 to Day 10 retention = same Day 0 cohort users active exactly on that nth day divided by Day 0 cohort users, expressed as a percentage.",
                 "manager_example": "If 100 users first played on Day 0 and 40 of those exact users returned on Day 1, Day 1 retention is 40%.",
-                "rolling_retention": "Rolling retention means users from the Day 0 cohort active on Day N or any later day. Exact rolling retention requires user-level event data/BigQuery export because GA4 Data API cohortActiveUsers is per exact nth day, not a unique union across future days.",
+                "rolling_retention": f"Rolling retention means users from the Day 0 cohort active on Day N or any later day. Source: {rolling_retention_source}.",
                 "dau": "GA4 activeUsers on the final selected day",
                 "wau": "GA4 active7DayUsers on the final selected day",
                 "mau": "GA4 active28DayUsers on the final selected day",
                 "stickiness_pct": "Final-day DAU divided by final-day MAU (active28DayUsers)",
                 "active_users_selected_range": "GA4 activeUsers across the full selected date range",
                 "user_engagement_duration": "GA4 userEngagementDuration metric in seconds",
-                "accuracy_note": "This is accurate GA4 cohort retention for first app/gameplay session cohorts. If retention must start from a later custom event such as tutorial_completed or level_start, exact user-level event cohorts require GA4 BigQuery export or user-id level event data.",
+                "accuracy_note": "Exact Day-N retention uses GA4 cohort reports. Rolling retention uses BigQuery user-level export when BIGQUERY_ENABLED is true; otherwise it falls back to a GA4 lower-bound estimate.",
             },
         }
 

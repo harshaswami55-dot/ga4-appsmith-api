@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     google_application_credentials: Path | None = None
     google_service_account_json: str | None = None
     google_service_account_json_base64: str | None = None
+    bigquery_enabled: bool = False
+    bigquery_project_id: str | None = None
+    bigquery_dataset: str | None = None
+    bigquery_location: str | None = None
 
     auth_enabled: bool = True
     api_keys: str = ""
