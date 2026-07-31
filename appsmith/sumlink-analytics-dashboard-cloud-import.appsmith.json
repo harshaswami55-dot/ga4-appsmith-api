@@ -21,7 +21,25 @@
     },
     "new": true
   },
-  "datasourceList": [],
+  "datasourceList": [
+    {
+      "name": "SumlinkAPI",
+      "pluginId": "restapi-plugin",
+      "pluginPackageName": "restapi-plugin",
+      "datasourceConfiguration": {
+        "url": "https://sumlink-analytics-api.onrender.com",
+        "headers": [
+          {
+            "key": "x-api-key",
+            "value": "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
+          }
+        ]
+      },
+      "invalids": [],
+      "isValid": true,
+      "isConfigured": true
+    }
+  ],
   "pageList": [
     {
       "userPermissions": [
@@ -45728,13 +45746,13 @@
         "manage:actions"
       ],
       "pluginType": "API",
-      "pluginId": "6a5ddaad9403d7ed01a7986d",
+      "pluginId": "restapi-plugin",
       "unpublishedAction": {
         "name": "ExecutiveSummary",
         "datasource": {
           "userPermissions": [],
           "name": "SumlinkAPI",
-          "pluginId": "6a5ddaad9403d7ed01a7986d",
+          "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
             "url": "https://sumlink-analytics-api.onrender.com",
             "headers": [
@@ -45746,7 +45764,8 @@
           },
           "invalids": [],
           "isValid": true,
-          "new": true
+          "new": true,
+          "pluginPackageName": "restapi-plugin"
         },
         "pageId": "Executive Health",
         "actionConfiguration": {
@@ -45841,7 +45860,9 @@
           "(typeof this !== \"undefined\" && this.params && this.params.level_number !== undefined ? this.params.level_number : (appsmith.store[\"ExecutiveSummary_filters\"]?.level_number ?? \"\"))"
         ],
         "confirmBeforeExecute": false,
-        "userPermissions": []
+        "userPermissions": [],
+        "pluginId": "restapi-plugin",
+        "pluginPackageName": "restapi-plugin"
       },
       "new": false,
       "publishedAction": {
@@ -45849,7 +45870,7 @@
         "datasource": {
           "userPermissions": [],
           "name": "SumlinkAPI",
-          "pluginId": "6a5ddaad9403d7ed01a7986d",
+          "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
             "url": "https://sumlink-analytics-api.onrender.com",
             "headers": [
@@ -45861,7 +45882,8 @@
           },
           "invalids": [],
           "isValid": true,
-          "new": true
+          "new": true,
+          "pluginPackageName": "restapi-plugin"
         },
         "pageId": "Executive Health",
         "actionConfiguration": {
@@ -45956,8 +45978,11 @@
           "(typeof this !== \"undefined\" && this.params && this.params.level_number !== undefined ? this.params.level_number : (appsmith.store[\"ExecutiveSummary_filters\"]?.level_number ?? \"\"))"
         ],
         "confirmBeforeExecute": false,
-        "userPermissions": []
-      }
+        "userPermissions": [],
+        "pluginId": "restapi-plugin",
+        "pluginPackageName": "restapi-plugin"
+      },
+      "pluginPackageName": "restapi-plugin"
     },
     {
       "id": "64a5df3c2bc8e5f3b81f04ba",
@@ -45967,13 +45992,13 @@
         "manage:actions"
       ],
       "pluginType": "API",
-      "pluginId": "6a5ddaad9403d7ed01a7986d",
+      "pluginId": "restapi-plugin",
       "unpublishedAction": {
         "name": "AcquisitionSummary",
         "datasource": {
           "userPermissions": [],
           "name": "SumlinkAPI",
-          "pluginId": "6a5ddaad9403d7ed01a7986d",
+          "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
             "url": "https://sumlink-analytics-api.onrender.com",
             "headers": [
@@ -45985,7 +46010,8 @@
           },
           "invalids": [],
           "isValid": true,
-          "new": true
+          "new": true,
+          "pluginPackageName": "restapi-plugin"
         },
         "pageId": "Acquisition",
         "actionConfiguration": {
@@ -46080,7 +46106,9 @@
           "(typeof this !== \"undefined\" && this.params && this.params.level_number !== undefined ? this.params.level_number : (appsmith.store[\"AcquisitionSummary_filters\"]?.level_number ?? \"\"))"
         ],
         "confirmBeforeExecute": false,
-        "userPermissions": []
+        "userPermissions": [],
+        "pluginId": "restapi-plugin",
+        "pluginPackageName": "restapi-plugin"
       },
       "new": false,
       "publishedAction": {
@@ -46088,7 +46116,7 @@
         "datasource": {
           "userPermissions": [],
           "name": "SumlinkAPI",
-          "pluginId": "6a5ddaad9403d7ed01a7986d",
+          "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
             "url": "https://sumlink-analytics-api.onrender.com",
             "headers": [
@@ -46100,7 +46128,8 @@
           },
           "invalids": [],
           "isValid": true,
-          "new": true
+          "new": true,
+          "pluginPackageName": "restapi-plugin"
         },
         "pageId": "Acquisition",
         "actionConfiguration": {
@@ -46195,8 +46224,11 @@
           "(typeof this !== \"undefined\" && this.params && this.params.level_number !== undefined ? this.params.level_number : (appsmith.store[\"AcquisitionSummary_filters\"]?.level_number ?? \"\"))"
         ],
         "confirmBeforeExecute": false,
-        "userPermissions": []
-      }
+        "userPermissions": [],
+        "pluginId": "restapi-plugin",
+        "pluginPackageName": "restapi-plugin"
+      },
+      "pluginPackageName": "restapi-plugin"
     },
     {
       "id": "64a5df3c2bc8e5f3b81f0554",
@@ -46206,13 +46238,13 @@
         "manage:actions"
       ],
       "pluginType": "API",
-      "pluginId": "6a5ddaad9403d7ed01a7986d",
+      "pluginId": "restapi-plugin",
       "unpublishedAction": {
         "name": "OnboardingSummary",
         "datasource": {
           "userPermissions": [],
           "name": "SumlinkAPI",
-          "pluginId": "6a5ddaad9403d7ed01a7986d",
+          "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
             "url": "https://sumlink-analytics-api.onrender.com",
             "headers": [
@@ -46224,7 +46256,8 @@
           },
           "invalids": [],
           "isValid": true,
-          "new": true
+          "new": true,
+          "pluginPackageName": "restapi-plugin"
         },
         "pageId": "Onboarding",
         "actionConfiguration": {
@@ -46319,7 +46352,9 @@
           "(typeof this !== \"undefined\" && this.params && this.params.level_number !== undefined ? this.params.level_number : (appsmith.store[\"OnboardingSummary_filters\"]?.level_number ?? \"\"))"
         ],
         "confirmBeforeExecute": false,
-        "userPermissions": []
+        "userPermissions": [],
+        "pluginId": "restapi-plugin",
+        "pluginPackageName": "restapi-plugin"
       },
       "new": false,
       "publishedAction": {
@@ -46327,7 +46362,7 @@
         "datasource": {
           "userPermissions": [],
           "name": "SumlinkAPI",
-          "pluginId": "6a5ddaad9403d7ed01a7986d",
+          "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
             "url": "https://sumlink-analytics-api.onrender.com",
             "headers": [
@@ -46339,7 +46374,8 @@
           },
           "invalids": [],
           "isValid": true,
-          "new": true
+          "new": true,
+          "pluginPackageName": "restapi-plugin"
         },
         "pageId": "Onboarding",
         "actionConfiguration": {
@@ -46434,8 +46470,11 @@
           "(typeof this !== \"undefined\" && this.params && this.params.level_number !== undefined ? this.params.level_number : (appsmith.store[\"OnboardingSummary_filters\"]?.level_number ?? \"\"))"
         ],
         "confirmBeforeExecute": false,
-        "userPermissions": []
-      }
+        "userPermissions": [],
+        "pluginId": "restapi-plugin",
+        "pluginPackageName": "restapi-plugin"
+      },
+      "pluginPackageName": "restapi-plugin"
     },
     {
       "id": "64a5df3c2bc8e5f3b81f05a5",
@@ -46445,13 +46484,13 @@
         "manage:actions"
       ],
       "pluginType": "API",
-      "pluginId": "6a5ddaad9403d7ed01a7986d",
+      "pluginId": "restapi-plugin",
       "unpublishedAction": {
         "name": "GameplaySummary",
         "datasource": {
           "userPermissions": [],
           "name": "SumlinkAPI",
-          "pluginId": "6a5ddaad9403d7ed01a7986d",
+          "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
             "url": "https://sumlink-analytics-api.onrender.com",
             "headers": [
@@ -46463,7 +46502,8 @@
           },
           "invalids": [],
           "isValid": true,
-          "new": true
+          "new": true,
+          "pluginPackageName": "restapi-plugin"
         },
         "pageId": "Gameplay",
         "actionConfiguration": {
@@ -46558,7 +46598,9 @@
           "(typeof this !== \"undefined\" && this.params && this.params.level_number !== undefined ? this.params.level_number : (appsmith.store[\"GameplaySummary_filters\"]?.level_number ?? \"\"))"
         ],
         "confirmBeforeExecute": false,
-        "userPermissions": []
+        "userPermissions": [],
+        "pluginId": "restapi-plugin",
+        "pluginPackageName": "restapi-plugin"
       },
       "new": false,
       "publishedAction": {
@@ -46566,7 +46608,7 @@
         "datasource": {
           "userPermissions": [],
           "name": "SumlinkAPI",
-          "pluginId": "6a5ddaad9403d7ed01a7986d",
+          "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
             "url": "https://sumlink-analytics-api.onrender.com",
             "headers": [
@@ -46578,7 +46620,8 @@
           },
           "invalids": [],
           "isValid": true,
-          "new": true
+          "new": true,
+          "pluginPackageName": "restapi-plugin"
         },
         "pageId": "Gameplay",
         "actionConfiguration": {
@@ -46673,8 +46716,11 @@
           "(typeof this !== \"undefined\" && this.params && this.params.level_number !== undefined ? this.params.level_number : (appsmith.store[\"GameplaySummary_filters\"]?.level_number ?? \"\"))"
         ],
         "confirmBeforeExecute": false,
-        "userPermissions": []
-      }
+        "userPermissions": [],
+        "pluginId": "restapi-plugin",
+        "pluginPackageName": "restapi-plugin"
+      },
+      "pluginPackageName": "restapi-plugin"
     },
     {
       "id": "64a5df3c2bc8e5f3b81f06d8",
@@ -46684,13 +46730,13 @@
         "manage:actions"
       ],
       "pluginType": "API",
-      "pluginId": "6a5ddaad9403d7ed01a7986d",
+      "pluginId": "restapi-plugin",
       "unpublishedAction": {
         "name": "RetentionSummary",
         "datasource": {
           "userPermissions": [],
           "name": "SumlinkAPI",
-          "pluginId": "6a5ddaad9403d7ed01a7986d",
+          "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
             "url": "https://sumlink-analytics-api.onrender.com",
             "headers": [
@@ -46702,7 +46748,8 @@
           },
           "invalids": [],
           "isValid": true,
-          "new": true
+          "new": true,
+          "pluginPackageName": "restapi-plugin"
         },
         "pageId": "Retention",
         "actionConfiguration": {
@@ -46797,7 +46844,9 @@
           "(typeof this !== \"undefined\" && this.params && this.params.level_number !== undefined ? this.params.level_number : (appsmith.store[\"RetentionSummary_filters\"]?.level_number ?? \"\"))"
         ],
         "confirmBeforeExecute": false,
-        "userPermissions": []
+        "userPermissions": [],
+        "pluginId": "restapi-plugin",
+        "pluginPackageName": "restapi-plugin"
       },
       "new": false,
       "publishedAction": {
@@ -46805,7 +46854,7 @@
         "datasource": {
           "userPermissions": [],
           "name": "SumlinkAPI",
-          "pluginId": "6a5ddaad9403d7ed01a7986d",
+          "pluginId": "restapi-plugin",
           "datasourceConfiguration": {
             "url": "https://sumlink-analytics-api.onrender.com",
             "headers": [
@@ -46817,7 +46866,8 @@
           },
           "invalids": [],
           "isValid": true,
-          "new": true
+          "new": true,
+          "pluginPackageName": "restapi-plugin"
         },
         "pageId": "Retention",
         "actionConfiguration": {
@@ -46912,8 +46962,11 @@
           "(typeof this !== \"undefined\" && this.params && this.params.level_number !== undefined ? this.params.level_number : (appsmith.store[\"RetentionSummary_filters\"]?.level_number ?? \"\"))"
         ],
         "confirmBeforeExecute": false,
-        "userPermissions": []
-      }
+        "userPermissions": [],
+        "pluginId": "restapi-plugin",
+        "pluginPackageName": "restapi-plugin"
+      },
+      "pluginPackageName": "restapi-plugin"
     }
   ],
   "decryptedFields": {},
