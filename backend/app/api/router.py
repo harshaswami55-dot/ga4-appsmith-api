@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from app.api import acquisition, executive, export, gameplay, onboarding, retention, settings
+from app.api import acquisition, aliases, executive, export, gameplay, onboarding, retention, settings
 from app.auth import verify_api_key
 
 
@@ -12,4 +12,6 @@ api_router.include_router(gameplay.router)
 api_router.include_router(retention.router)
 api_router.include_router(export.router)
 api_router.include_router(settings.router)
+api_router.include_router(aliases.alias_router)
+
 

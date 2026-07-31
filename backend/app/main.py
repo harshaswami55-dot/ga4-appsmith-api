@@ -20,9 +20,11 @@ app.add_middleware(
     allow_origins=settings.cors_origin_list,
     allow_credentials=settings.cors_origin_list != ["*"],
     allow_methods=["GET", "DELETE", "OPTIONS"],
-    allow_headers=["Content-Type", "X-API-Key"],
+    allow_headers=["Content-Type", "X-API-Key", "x-api-key"],
 )
 app.include_router(api_router, prefix=settings.api_prefix)
+app.include_router(api_router, prefix="")
+
 
 
 @app.exception_handler(GA4QueryError)
