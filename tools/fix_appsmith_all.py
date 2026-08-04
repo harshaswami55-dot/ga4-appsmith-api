@@ -3,11 +3,10 @@ from pathlib import Path
 
 ROOT = Path(r"d:\XORSTACK\Sumlink dashboard appsmith")
 BASE_URL = "https://sumlink-analytics-api.onrender.com"
-API_KEY = "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
+API_KEY = "sumlink-dashboard-key-2026"
 
 FILES = [
     ROOT / "appsmith" / "sumlink-analytics-dashboard.appsmith.json",
-    ROOT / "appsmith" / "sumlink-analytics-dashboard-cloud-import.appsmith.json",
 ]
 
 REST_PLUGIN_ID = "restapi-plugin"
@@ -70,11 +69,37 @@ def patch_all(filepath):
 
     # 2. Exported Application
     exp_app = data.get("exportedApplication", {})
+    exp_app["id"] = "64a5df3c2bc8e5f3b81f0000"
+    exp_app["baseId"] = "64a5df3c2bc8e5f3b81f0000"
+    exp_app["baseApplicationId"] = "64a5df3c2bc8e5f3b81f0000"
     exp_app["userPermissions"] = []
     exp_app["publishedDefaultPageName"] = "Executive Health"
     exp_app["unpublishedDefaultPageName"] = "Executive Health"
     exp_app["publishedDefaultPageId"] = PAGE_ID_MAP["Executive Health"]
     exp_app["unpublishedDefaultPageId"] = PAGE_ID_MAP["Executive Health"]
+    exp_app["publishedDefaultBasePageId"] = PAGE_ID_MAP["Executive Health"]
+    exp_app["unpublishedDefaultBasePageId"] = PAGE_ID_MAP["Executive Health"]
+    exp_app["publishedCustomPage"] = {
+        "name": "Executive Health",
+        "id": PAGE_ID_MAP["Executive Health"],
+        "basePageId": PAGE_ID_MAP["Executive Health"]
+    }
+    exp_app["unpublishedCustomPage"] = {
+        "name": "Executive Health",
+        "id": PAGE_ID_MAP["Executive Health"],
+        "basePageId": PAGE_ID_MAP["Executive Health"]
+    }
+
+    # Remove any non-standard root keys to prevent Jackson deserialization 500 error in Appsmith server
+    allowed_root_keys = {
+        "clientVersion", "fileFormatVersion", "serverSchemaVersion",
+        "exportedApplication", "pluginList", "datasourceList", "actionList",
+        "actionCollectionList", "customJSLibList", "pageList",
+        "publishedDefaultPageName", "unpublishedDefaultPageName", "decryptedFields"
+    }
+    for k in list(data.keys()):
+        if k not in allowed_root_keys:
+            del data[k]
 
     # 3. Datasource List
     data["datasourceList"] = [
@@ -106,7 +131,22 @@ def patch_all(filepath):
 
             page["id"] = p_id
             page["baseId"] = p_id
+            page["basePageId"] = p_id
+            page["isDefault"] = (p_name == "Executive Health")
+            page["defaultPageId"] = p_id
             page["userPermissions"] = []
+            page["unpublishedCustomPage"] = {
+                "name": p_name,
+                "id": p_id,
+                "basePageId": p_id,
+                "isDefault": (p_name == "Executive Health")
+            }
+            page["publishedCustomPage"] = {
+                "name": p_name,
+                "id": p_id,
+                "basePageId": p_id,
+                "isDefault": (p_name == "Executive Health")
+            }
 
             for p_key in ["unpublishedPage", "publishedPage"]:
                 if p_key in page and isinstance(page[p_key], dict):
@@ -118,6 +158,15 @@ def patch_all(filepath):
                     p_obj["isDefault"] = (p_name == "Executive Health")
                     for layout in p_obj.get("layouts", []):
                         layout["userPermissions"] = []
+                        for group in layout.get("layoutOnLoadActions", []):
+                            for act_ref in group:
+                                a_name = act_ref.get("name")
+                                a_id = ACTION_ID_MAP.get(a_name, act_ref.get("id"))
+                                act_ref["id"] = a_id
+                                act_ref["baseActionId"] = a_id
+                                act_ref["pageId"] = p_id
+                                act_ref["basePageId"] = p_id
+                                act_ref["clientSideExecution"] = False
 
     # 5. Action List with endpoints, headers, pluginPackageName, basePageId, and action IDs
     if "actionList" in data and isinstance(data["actionList"], list):
@@ -144,7 +193,7 @@ def patch_all(filepath):
                     act["pluginId"] = REST_PLUGIN_ID
                     act["pluginPackageName"] = REST_PACKAGE_NAME
                     act["pluginType"] = "API"
-                    act["pageId"] = target_pname
+                    act["pageId"] = target_pid
                     act["basePageId"] = target_pid
                     act["userPermissions"] = []
 

@@ -112,6 +112,15 @@ async function main() {
       {
         $set: {
           updatedAt: new Date(),
+          id: importedPage.id || existing.id,
+          baseId: importedPage.baseId || importedPage.unpublishedPage?.baseId || existing.baseId,
+          basePageId: importedPage.basePageId || importedPage.unpublishedPage?.basePageId || existing.basePageId,
+          "unpublishedPage.id": importedPage.unpublishedPage?.id || existing.unpublishedPage?.id,
+          "publishedPage.id": importedPage.publishedPage?.id || importedPage.unpublishedPage?.id || existing.publishedPage?.id,
+          "unpublishedPage.baseId": importedPage.unpublishedPage?.baseId || importedPage.baseId || existing.unpublishedPage?.baseId,
+          "publishedPage.baseId": importedPage.publishedPage?.baseId || importedPage.unpublishedPage?.baseId || existing.publishedPage?.baseId,
+          "unpublishedPage.basePageId": importedPage.unpublishedPage?.basePageId || importedPage.basePageId || existing.unpublishedPage?.basePageId,
+          "publishedPage.basePageId": importedPage.publishedPage?.basePageId || importedPage.unpublishedPage?.basePageId || existing.publishedPage?.basePageId,
           "unpublishedPage.name": name,
           "publishedPage.name": name,
           "unpublishedPage.slug": importedPage.unpublishedPage?.slug,

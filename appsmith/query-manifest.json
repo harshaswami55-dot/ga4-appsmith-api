@@ -1,57 +1,40 @@
 {
-  "basePath": "/api",
+  "basePath": "/api/v1",
   "commonQueryParams": [
-    "startDate",
-    "endDate",
-    "appVersion",
-    "osVersion",
-    "deviceModel",
-    "newReturning"
+    "start_date",
+    "end_date",
+    "app_version",
+    "os_version",
+    "device_model",
+    "country",
+    "platform",
+    "device_category",
+    "traffic_source",
+    "campaign",
+    "user_type",
+    "level_number",
+    "tutorial_step"
   ],
   "queries": [
     {
-      "name": "getExecutiveHealth",
-      "path": "/executive-health"
+      "name": "ExecutiveSummary",
+      "path": "/executive/summary"
     },
     {
-      "name": "getAcquisitionChurn",
-      "path": "/acquisition-churn"
+      "name": "AcquisitionSummary",
+      "path": "/acquisition/summary"
     },
     {
-      "name": "getOnboardingFunnel",
-      "path": "/onboarding-funnel"
+      "name": "OnboardingSummary",
+      "path": "/onboarding/summary"
     },
     {
-      "name": "getTutorialFrustration",
-      "path": "/tutorial-frustration"
+      "name": "GameplaySummary",
+      "path": "/gameplay/summary"
     },
     {
-      "name": "getGameplayBalancing",
-      "path": "/gameplay-balancing"
-    },
-    {
-      "name": "getLevelDifficulty",
-      "path": "/level-difficulty",
-      "additionalParams": [
-        "page",
-        "pageSize"
-      ]
-    },
-    {
-      "name": "getRetention",
-      "path": "/retention"
-    },
-    {
-      "name": "getDauMau",
-      "path": "/dau-mau"
-    },
-    {
-      "name": "getTutorialSkip",
-      "path": "/tutorial-skip"
-    },
-    {
-      "name": "getNeverPlayed",
-      "path": "/never-played"
+      "name": "RetentionSummary",
+      "path": "/retention/summary"
     }
   ]
 }

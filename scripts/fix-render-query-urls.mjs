@@ -80,6 +80,13 @@ const expected = [
   `${renderBase}/api/v1/gameplay/summary`,
   `${renderBase}/api/v1/retention/summary`,
 ];
+const legacyPaths = [
+  `${renderBase}/api/executive-health`,
+  `${renderBase}/api/acquisition-churn`,
+  `${renderBase}/api/onboarding-funnel`,
+  `${renderBase}/api/gameplay-balancing`,
+  `${renderBase}/api/retention`,
+];
 
 const verificationTargets = roots.filter((target) => fs.existsSync(target));
 const combined = [];
@@ -107,10 +114,7 @@ for (const target of verificationTargets) collect(target);
 const source = combined.join("\n");
 
 const missing = expected.filter((url) => !source.includes(url));
-const stale = [
-  "https://sumlink-analytics-api.onrender.com",
-  "https://sumlink-analytics-api.onrender.com",
-].filter((url) => source.includes(url));
+const stale = legacyPaths.filter((url) => source.includes(url));
 
 if (missing.length || stale.length) {
   throw new Error(

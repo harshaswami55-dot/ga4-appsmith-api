@@ -3,13 +3,17 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
+    env_file:
+      - ./backend/.env
     environment:
       ENVIRONMENT: development
       GA4_PROPERTY_ID: "516899630"
       GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/ga4-service-account.json
+      BIGQUERY_ENABLED: "true"
+      BIGQUERY_PROJECT_ID: ga-biquery-analytics
+      BIGQUERY_DATASET: analytics_516899630
       AUTH_ENABLED: "false"
       CORS_ORIGINS: "*"
     volumes:
-      - "${GA4_CREDENTIALS_HOST_PATH}:/run/secrets/ga4-service-account.json:ro"
+      - "${GA4_CREDENTIALS_HOST_PATH:-C:/Users/harsh/credentials/phrasal-clover-493807-m9-4019d33cb4de.json}:/run/secrets/ga4-service-account.json:ro"
     restart: unless-stopped
-

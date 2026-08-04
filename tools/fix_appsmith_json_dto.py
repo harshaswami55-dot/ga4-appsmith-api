@@ -3,7 +3,7 @@ from pathlib import Path
 
 ROOT = Path(r"d:\XORSTACK\Sumlink dashboard appsmith")
 BASE_URL = "https://sumlink-analytics-api.onrender.com"
-API_KEY = "UB9c9YFakU4h8+eFZGalibxAJH+c4s2SBu0NJxux0HQ="
+API_KEY = "sumlink-dashboard-key-2026"
 
 FILES = [
     ROOT / "appsmith" / "sumlink-analytics-dashboard.appsmith.json",

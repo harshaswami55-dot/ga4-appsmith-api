@@ -7,6 +7,9 @@ htmlcov/
 .env
 backend/.env
 *.log
+.codex-*
+.tmp_*
+.tmp_appsmith_src/
 .idea/
 .vscode/
 credentials/
@@ -15,3 +18,7 @@ credentials/
 node_modules/
 npm-debug.log*
 dist/
+tools/cloudflared.exe
+appsmith/EXACT_*_sumlink-analytics-dashboard-cloud-import.appsmith.json
+appsmith/THURSDAY_WORKING_UPLOAD_sumlink-analytics-dashboard-cloud-import.appsmith.json
+appsmith/sumlink-analytics-dashboard-native-cloud.json

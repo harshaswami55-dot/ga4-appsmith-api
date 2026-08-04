@@ -1,4 +1,3 @@
-import os
 import sys
 from pathlib import Path
 
@@ -7,10 +6,6 @@ root_dir = Path(__file__).resolve().parents[1]
 backend_dir = root_dir / "backend"
 sys.path.insert(0, str(backend_dir))
 
-# Set environment credentials
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\harsh\credentials\phrasal-clover-493807-m9-4019d33cb4de.json"
-os.environ["GA4_PROPERTY_ID"] = "516899630"
-
 from app.schemas.filters import DashboardFilters
 from app.services.ga4_service import get_ga4_service
 from app.services.executive_service import ExecutiveService
@@ -18,12 +13,17 @@ from app.services.acquisition_service import AcquisitionService
 from app.services.onboarding_service import OnboardingService
 from app.services.gameplay_service import GameplayService
 from app.services.retention_service import RetentionService
+from app.config import get_settings
 
 def run_validation():
+    settings = get_settings()
     print("=" * 65)
     print("GA4 & BIGQUERY COMPREHENSIVE DATA VALIDATION REPORT")
     print("=" * 65)
-    print(f"GA4 Property ID : 516899630")
+    print(f"GA4 Property ID : {settings.ga4_property_id}")
+    print(f"BigQuery Enabled: {settings.bigquery_enabled}")
+    if settings.bigquery_enabled:
+        print(f"BigQuery Dataset: {settings.bigquery_project_id}.{settings.bigquery_dataset}")
     print(f"Date Window     : 30daysAgo to yesterday (default)")
     print("-" * 65)
 
@@ -48,7 +48,7 @@ def run_validation():
     print("\n[2] ACQUISITION & CHURN SECTION")
     acq_svc = AcquisitionService(ga4_service)
     acq_data = acq_svc.dashboard(filters)
-    acq_summary = acq_data.get("summary", {})
+    acq_summary = acq_data.get("kpis", {})
     print(f"  [+] Installs (first_open) : {acq_summary.get('installs')}")
     print(f"  [+] App Removes           : {acq_summary.get('app_removes')}")
     print(f"  [+] Traffic Sources Count : {len(acq_data.get('traffic_sources', []))}")
@@ -60,7 +60,7 @@ def run_validation():
     print("\n[3] ONBOARDING FUNNEL SECTION")
     onb_svc = OnboardingService(ga4_service)
     onb_data = onb_svc.dashboard(filters)
-    onb_summary = onb_data.get("summary", {})
+    onb_summary = onb_data.get("kpis", {})
     print(f"  [+] Tutorial Started      : {onb_summary.get('tutorial_started')}")
     print(f"  [+] Tutorial Completed    : {onb_summary.get('tutorial_completed')}")
     print(f"  [+] Funnel Stages Count   : {len(onb_data.get('funnel', []))}")
@@ -70,7 +70,7 @@ def run_validation():
     print("\n[4] GAMEPLAY BALANCING SECTION")
     game_svc = GameplayService(ga4_service)
     game_data = game_svc.dashboard(filters)
-    game_summary = game_data.get("summary", {})
+    game_summary = game_data.get("kpis", {})
     print(f"  [+] Total Level Starts    : {game_summary.get('level_started')}")
     print(f"  [+] Total Level Completes : {game_summary.get('level_completed')}")
     print(f"  [+] Hint Usage Events     : {game_summary.get('hint_events')}")
@@ -80,16 +80,20 @@ def run_validation():
     print("\n[5] RETENTION SECTION")
     ret_svc = RetentionService(ga4_service)
     ret_data = ret_svc.dashboard(filters)
-    ret_summary = ret_data.get("summary", {})
+    ret_summary = ret_data.get("kpis", {})
     print(f"  [+] Active Users DAU      : {ret_summary.get('dau')}")
     print(f"  [+] Active Users WAU      : {ret_summary.get('wau')}")
     print(f"  [+] Active Users MAU      : {ret_summary.get('mau')}")
     print(f"  [+] Day 1 Retention %     : {ret_summary.get('day_1_retention_pct')}%")
     print(f"  [+] Retention Curve Rows  : {len(ret_data.get('retention_curve', []))}")
+    rolling_rows = ret_data.get("rolling_retention_table", [])
+    rolling_source = ret_data.get("definitions", {}).get("rolling_retention", "")
+    print(f"  [+] Rolling Retention Rows: {len(rolling_rows)}")
+    print(f"  [+] Rolling Source        : {rolling_source}")
 
     print("\n" + "=" * 65)
     print("STATUS: VALIDATION PASSED SUCCESSFULLY")
-    print("All live GA4 queries executed cleanly against property 516899630.")
+    print(f"All live GA4 queries executed cleanly against property {settings.ga4_property_id}.")
     print("=" * 65)
 
 if __name__ == "__main__":

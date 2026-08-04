@@ -5,13 +5,13 @@ const outFile = path.resolve("appsmith/sumlink-analytics-dashboard.appsmith.json
 
 const appName = "Sumlink Analytics Dashboard";
 const baseUrl = "https://sumlink-analytics-api.onrender.com";
-const restApiPluginId = "6a5ddaad9403d7ed01a7986d";
+const restApiPluginId = "restapi-plugin";
 const endpointByQueryName = {
-  ExecutiveSummary: "https://sumlink-analytics-api.onrender.com/api/executive-health",
-  AcquisitionSummary: "https://sumlink-analytics-api.onrender.com/api/acquisition-churn",
-  OnboardingSummary: "https://sumlink-analytics-api.onrender.com/api/onboarding-funnel",
-  GameplaySummary: "https://sumlink-analytics-api.onrender.com/api/gameplay-balancing",
-  RetentionSummary: "https://sumlink-analytics-api.onrender.com/api/retention",
+  ExecutiveSummary: "/api/v1/executive/summary",
+  AcquisitionSummary: "/api/v1/acquisition/summary",
+  OnboardingSummary: "/api/v1/onboarding/summary",
+  GameplaySummary: "/api/v1/gameplay/summary",
+  RetentionSummary: "/api/v1/retention/summary",
 };
 const shortSourceLabelJs = `(source, medium) => {
   const clean = (value) => {
@@ -91,6 +91,24 @@ function kpiIcon(label) {
 
 function kpiSparklineData(pageQuery, key) {
   const data = safeQueryData(pageQuery);
+  const custom = {
+    AcquisitionSummary: {
+      new_users: `{{(() => { const rows = ${data}?.daily_source_users || []; const byDate = {}; rows.forEach(r => { const date = String(r.date || ""); byDate[date] = (byDate[date] || 0) + Number(r.newUsers || 0); }); return Object.entries(byDate).sort(([a], [b]) => a.localeCompare(b)).slice(-14).map(([x, y]) => ({ x, y })); })()}}`,
+      active_users: `{{(() => { const rows = ${data}?.daily_source_users || []; const byDate = {}; rows.forEach(r => { const date = String(r.date || ""); byDate[date] = (byDate[date] || 0) + Number(r.activeUsers || 0); }); return Object.entries(byDate).sort(([a], [b]) => a.localeCompare(b)).slice(-14).map(([x, y]) => ({ x, y })); })()}}`,
+      sessions: `{{(${data}?.campaign_performance || []).slice(0, 14).reverse().map(r => ({ x: String(r.firstUserCampaignName || r.firstUserSource || "Campaign"), y: Number(r.sessions || 0) })).filter(p => Number.isFinite(p.y))}}`,
+    },
+    OnboardingSummary: {
+      tutorial_completed: `{{(() => { const rows = ${data}?.daily_step_completion || []; const byDate = {}; rows.forEach(r => { const date = String(r.date || ""); byDate[date] = (byDate[date] || 0) + Number(r.match_made_users || 0); }); return Object.entries(byDate).sort(([a], [b]) => a.localeCompare(b)).slice(-14).map(([x, y]) => ({ x, y })); })()}}`,
+      completion_pct: `{{(() => { const rows = ${data}?.daily_step_completion || []; const byDate = {}; rows.forEach(r => { const date = String(r.date || ""); const item = byDate[date] || { total: 0, count: 0 }; item.total += Number(r.completion_pct || 0); item.count += 1; byDate[date] = item; }); return Object.entries(byDate).sort(([a], [b]) => a.localeCompare(b)).slice(-14).map(([x, v]) => ({ x, y: v.count ? Number((v.total / v.count).toFixed(2)) : 0 })); })()}}`,
+      failure_pct: `{{(() => { const rows = ${data}?.daily_step_completion || []; const byDate = {}; rows.forEach(r => { const date = String(r.date || ""); const item = byDate[date] || { total: 0, count: 0 }; item.total += Number(r.failure_pct || 0); item.count += 1; byDate[date] = item; }); return Object.entries(byDate).sort(([a], [b]) => a.localeCompare(b)).slice(-14).map(([x, v]) => ({ x, y: v.count ? Number((v.total / v.count).toFixed(2)) : 0 })); })()}}`,
+      skip_pct: `{{(() => { const rows = ${data}?.daily_step_completion || []; const byDate = {}; rows.forEach(r => { const date = String(r.date || ""); const item = byDate[date] || { total: 0, count: 0 }; item.total += Number(r.skip_pct || 0); item.count += 1; byDate[date] = item; }); return Object.entries(byDate).sort(([a], [b]) => a.localeCompare(b)).slice(-14).map(([x, v]) => ({ x, y: v.count ? Number((v.total / v.count).toFixed(2)) : 0 })); })()}}`,
+      average_tutorial_time: `{{(${data}?.average_time_by_step || []).slice(0, 14).map(r => ({ x: String(r.step || "Step"), y: Number(r.average_time_sec || 0) })).filter(p => Number.isFinite(p.y))}}`,
+      launch_to_first_step_pct: `{{(${data}?.detailed_funnel || []).slice(0, 14).map(r => ({ x: String(r.stage || r.event || "Stage"), y: Number(r.conversion_from_previous_pct || 0) })).filter(p => Number.isFinite(p.y))}}`,
+      first_step_drop_off_users: `{{(${data}?.step_analysis || []).slice(0, 14).map(r => ({ x: String(r.step || "Step"), y: Number(r.drop_off_users || 0) })).filter(p => Number.isFinite(p.y))}}`,
+      worst_tutorial_step: `{{(${data}?.step_analysis || []).slice(0, 14).map(r => ({ x: String(r.step || "Step"), y: Number(r.drop_off_pct || 0) })).filter(p => Number.isFinite(p.y))}}`,
+    },
+  };
+  if (custom[pageQuery]?.[key]) return custom[pageQuery][key];
   const byPage = {
     ExecutiveSummary: {
       active_users: ["daily_trend", "activeUsers"],
@@ -151,39 +169,137 @@ function kpiSparklineData(pageQuery, key) {
 
 
 function sparklineWidget(name, parentId, data, color, left, top, right, bottom) {
+  const seriesId = `${name}Series1`;
   const dataExpr = data.startsWith("{{") && data.endsWith("}}") ? data.slice(2, -2) : data;
-  return canvasTextWidget(
-    name,
-    `{{(() => {
-      const rows = (${dataExpr});
-      const values = (rows || []).map(r => Number(r.y || 0)).filter(Number.isFinite);
-      if (values.length < 2) return "Live data";
-      const first = Number(values[0] || 0);
-      const last = Number(values[values.length - 1] || 0);
-      if (!Number.isFinite(first) || !Number.isFinite(last)) return "Live data";
-      if (first === 0) {
-        if (last === 0) return "No change";
-        return "Latest " + last.toFixed(1);
-      }
-      const deltaPct = ((last - first) / Math.abs(first)) * 100;
-      if (!Number.isFinite(deltaPct)) return "Live data";
-      if (Math.abs(deltaPct) < 0.5) return "Stable vs start";
-      const sign = deltaPct > 0 ? "+" : "";
-      return sign + deltaPct.toFixed(1) + "% vs start";
-    })()}}`,
+  const config = `{{(() => {
+    const raw = ((${dataExpr}) || []);
+    const points = raw
+      .map((item, index) => ({
+        x: String(item?.x ?? index + 1),
+        y: Number(item?.y ?? 0)
+      }))
+      .filter(item => Number.isFinite(item.y));
+    const values = points.map(item => item.y);
+    const min = values.length ? Math.min(...values) : 0;
+    const max = values.length ? Math.max(...values) : 1;
+    const pad = Math.max((max - min) * 0.12, 1);
+    return {
+      animation: true,
+      animationDuration: 500,
+      grid: { left: 0, right: 0, top: 4, bottom: 0, containLabel: false },
+      legend: { show: false },
+      tooltip: {
+        show: true,
+        trigger: "axis",
+        axisPointer: { type: "none" },
+        backgroundColor: "#0F172A",
+        borderWidth: 0,
+        textStyle: { color: "#FFFFFF", fontSize: 11 },
+        formatter: params => {
+          const point = params?.[0];
+          const value = Number(point?.value?.[1] ?? point?.value ?? 0);
+          return String(point?.axisValueLabel || "") + "<br/><b>" + (Number.isFinite(value) ? value.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "-") + "</b>";
+        }
+      },
+      xAxis: {
+        type: "category",
+        show: false,
+        boundaryGap: false,
+        data: points.map(item => item.x),
+        axisLabel: { show: false },
+        axisLine: { show: false },
+        axisTick: { show: false },
+        splitLine: { show: false }
+      },
+      yAxis: {
+        type: "value",
+        show: false,
+        min: min - pad,
+        max: max + pad,
+        axisLabel: { show: false },
+        axisLine: { show: false },
+        axisTick: { show: false },
+        splitLine: { show: false }
+      },
+      series: [{
+        type: "line",
+        data: points.map(item => [item.x, item.y]),
+        smooth: true,
+        showSymbol: false,
+        symbol: "none",
+        symbolSize: 0,
+        hoverAnimation: false,
+        lineStyle: { width: 2.6, color: "${color}", cap: "round", join: "round" },
+        itemStyle: { color: "${color}" },
+        areaStyle: { color: "${color}", opacity: 0.10 },
+        emphasis: { disabled: true },
+        label: { show: false }
+      }]
+    };
+  })()}}`;
+  return {
+    widgetName: name,
+    widgetId: id("sparkline"),
+    type: "CHART_WIDGET",
+    displayName: "Chart",
+    version: 1,
+    key: id("sparkline_key"),
     parentId,
-    left,
-    top,
-    right,
-    bottom,
-    {
-      fontSize: "0.82rem",
-      fontStyle: "BOLD",
-      textColor: color,
-      textAlign: "RIGHT",
-      backgroundColor: "transparent",
-    }
-  );
+    renderMode: "CANVAS",
+    isVisible: true,
+    isLoading: false,
+    animateLoading: false,
+    leftColumn: left,
+    rightColumn: right,
+    topRow: top,
+    bottomRow: bottom,
+    parentRowSpace: 1,
+    parentColumnSpace: 1,
+    dynamicHeight: "FIXED",
+    responsiveBehavior: "fill",
+    minWidth: 120,
+    chartType: "CUSTOM_ECHART",
+    chartName: "",
+    chartData: {
+      [seriesId]: { seriesName: "Trend", data, color },
+    },
+    sourceData: data,
+    customEChartConfig: config,
+    customFusionChartConfig: {},
+    xAxisName: "",
+    yAxisName: "",
+    labelOrientation: "auto",
+    allowScroll: false,
+    showDataPointLabel: false,
+    setAdaptiveYMin: true,
+    borderRadius: "0px",
+    boxShadow: "none",
+    dynamicBindingPathList: [
+      { key: `chartData.${seriesId}.data` },
+      { key: "sourceData" },
+      { key: "customEChartConfig" },
+    ],
+    dynamicPropertyPathList: [
+      { key: `chartData.${seriesId}.data` },
+      { key: "sourceData" },
+      { key: "customEChartConfig" },
+    ],
+    dynamicTriggerPathList: [],
+  };
+}
+
+function sparklineTrendText(data) {
+  const dataExpr = data.startsWith("{{") && data.endsWith("}}") ? data.slice(2, -2) : data;
+  return `{{(() => {
+    const values = ((${dataExpr}) || []).map(r => Number(r.y || 0)).filter(Number.isFinite);
+    if (values.length < 2) return "Trend unavailable";
+    const first = values[0];
+    const last = values[values.length - 1];
+    if (first === 0) return last === 0 ? "No change" : "Latest " + last.toLocaleString(undefined, { maximumFractionDigits: 1 });
+    const delta = ((last - first) / Math.abs(first)) * 100;
+    if (!Number.isFinite(delta) || Math.abs(delta) < 0.5) return "Stable vs start";
+    return (delta > 0 ? "+" : "") + delta.toFixed(1) + "% vs start";
+  })()}}`;
 }
 
 function kpiCardTitle(label) {
@@ -207,9 +323,9 @@ function containerKpiCard(pageQuery, key, label, left, top, suffix = "") {
   const canvasId = id("kpiCanvas");
   const sparkData = kpiSparklineData(pageQuery, key);
   const valueText = `{{(() => { const v = ${safeQueryData(pageQuery)}?.kpis?.${key}; if (v === null || v === undefined || v === "") return "N/A"; const n = Number(v); if (!Number.isFinite(n)) return String(v).replaceAll("_", " "); const cleanLabel = "${label}".toLowerCase(); const needsDecimal = "${suffix}" === "%" || cleanLabel.includes("%") || cleanLabel.includes("rate") || cleanLabel.includes("ratio") || cleanLabel.includes("stickiness") || cleanLabel.includes("length") || cleanLabel.includes("time") || cleanLabel.includes("/user"); return (needsDecimal ? n.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 }) : Math.round(n).toLocaleString()) + "${suffix}"; })()}}`;
+  const valueFontSize = key === "worst_tutorial_step" ? "1.28rem" : "2rem";
   const isNegativeMetric = label.toLowerCase().includes("drop") || label.toLowerCase().includes("fail") || label.toLowerCase().includes("churn") || label.toLowerCase().includes("uninstall");
   const pillColor = isNegativeMetric ? "#EF4444" : "#10B981";
-  const pillArrow = isNegativeMetric ? "v" : "^";
   const card = {
     widgetName: `${safeName}KpiCard`,
     widgetId: containerId,
@@ -282,17 +398,18 @@ function containerKpiCard(pageQuery, key, label, left, top, suffix = "") {
             borderColor: "transparent",
             borderWidth: "0",
           }),
-          canvasTextWidget(`${safeName}Value`, valueText, canvasId, 13, 5, 61, 10, {
-            fontSize: "2.2rem",
+          canvasTextWidget(`${safeName}Value`, valueText, canvasId, 6, 5, 61, 10, {
+            fontSize: valueFontSize,
             fontStyle: "BOLD",
             textColor: "#111827",
           }),
-          canvasTextWidget(`${safeName}Footnote`, `${pillArrow} vs last 30 days`, canvasId, 13, 10, 61, 13, {
-            fontSize: "0.80rem",
+          canvasTextWidget(`${safeName}Footnote`, sparklineTrendText(sparkData), canvasId, 6, 14, 61, 16, {
+            fontSize: "0.72rem",
             fontStyle: "BOLD",
             textColor: pillColor,
+            textAlign: "RIGHT",
           }),
-          sparklineWidget(`${safeName}Sparkline`, canvasId, sparkData, visual.color, 2, 13, 62, 16),
+          sparklineWidget(`${safeName}Sparkline`, canvasId, sparkData, visual.color, 8, 10, 61, 14),
         ],
       },
     ],
@@ -405,7 +522,7 @@ function retentionCohortTableWidgets(name, label, queryName, left, top) {
     }),
     textWidget(
       `${name}FormulaNote`,
-      "Formula: Day N retention = users from that cohort active exactly on Day N / Day 0 cohort users. All Users = weighted summary of cohorts where that day exists. “—” means that day has not matured yet or GA4 returned no cohort row.",
+      'Formula: Day N retention = users from that cohort active exactly on Day N / Day 0 cohort users. All Users = weighted summary of cohorts where that day exists. "--" means that day has not matured yet or GA4 returned no cohort row.',
       left,
       formulaTop + 1,
       left + tableWidth,
@@ -528,7 +645,7 @@ function rollingRetentionTableWidgets(name, label, queryName, left, top) {
     }),
     textWidget(
       `${name}FormulaNote`,
-      "Formula: Rolling Day N+ = users from the same Day 0 cohort active on Day N or any later day / Day 0 users. This GA4 Data API version is a lower-bound estimate from exact Day N cohort counts. Exact unique-user rolling retention needs GA4 BigQuery user-level export.",
+      "Formula: Rolling Day N+ = distinct users from the same Day 0 cohort active on Day N or any later day / Day 0 cohort users. Source: GA4 BigQuery exact user-level export. Only matured cohorts are included; All Users is a weighted aggregate.",
       left,
       formulaTop + 1,
       left + tableWidth,
@@ -1285,7 +1402,11 @@ function defaultEChartConfig(chartType, axis = {}) {
         show: ${shouldShowLabels ? "true" : "false"},
         position: "${isLineLike ? "top" : "top"}",
         distance: 6,
-        fontSize: 9,
+        fontSize: 10,
+        color: "#334155",
+        backgroundColor: "rgba(255,255,255,0.88)",
+        borderRadius: 3,
+        padding: [2, 4],
         formatter: params => {
           const idx = params?.dataIndex ?? 0;
           const n = Number(params?.value?.[1] ?? params?.value ?? 0);
@@ -1600,6 +1721,15 @@ kpi = function kpi(pageQuery, key, label, left, top, suffix = "") {
 };
 
 function makePage({ name, slug, queryName, pathName, kpis, tables }) {
+  const pageIdBySlug = {
+    "executive-health": "64a5df3c2bc8e5f3b81f0001",
+    acquisition: "64a5df3c2bc8e5f3b81f0002",
+    onboarding: "64a5df3c2bc8e5f3b81f0003",
+    gameplay: "64a5df3c2bc8e5f3b81f0004",
+    retention: "64a5df3c2bc8e5f3b81f0005",
+  };
+  const pageId = pageIdBySlug[slug] || id("page");
+  const isDefault = slug === "executive-health";
   const filterNames = {
     dateRange: `${queryName}DateRangeFilter`,
     customStartDate: `${queryName}CustomStartDateFilter`,
@@ -1792,10 +1922,17 @@ function makePage({ name, slug, queryName, pathName, kpis, tables }) {
   const queryJsonPathKeys = queryParameters.map((param) => param.value.slice(2, -2));
   const action = {
     id: actionId,
+    baseId: actionId,
+    baseActionId: actionId,
+    basePageId: pageId,
     userPermissions: ["read:actions", "execute:actions", "manage:actions"],
     pluginType: "API",
     pluginId: restApiPluginId,
     unpublishedAction: {
+      id: actionId,
+      baseId: actionId,
+      baseActionId: actionId,
+      basePageId: pageId,
       name: queryName,
       datasource: {
         userPermissions: [],
@@ -1806,7 +1943,7 @@ function makePage({ name, slug, queryName, pathName, kpis, tables }) {
         isValid: true,
         new: true,
       },
-      pageId: name,
+      pageId: pageId,
       actionConfiguration: {
         timeoutInMillisecond: 60000,
         paginationType: "NONE",
@@ -1836,10 +1973,20 @@ function makePage({ name, slug, queryName, pathName, kpis, tables }) {
 
   return {
     page: {
+      id: pageId,
+      baseId: pageId,
+      basePageId: pageId,
+      defaultPageId: pageId,
+      isDefault,
+      new: true,
       userPermissions: ["read:pages", "manage:pages"],
       unpublishedPage: {
+        id: pageId,
+        baseId: pageId,
+        basePageId: pageId,
         name,
         slug,
+        isDefault,
         layouts: [
           {
             id: id("layout"),
@@ -1861,8 +2008,12 @@ function makePage({ name, slug, queryName, pathName, kpis, tables }) {
         userPermissions: [],
       },
       publishedPage: {
+        id: pageId,
+        baseId: pageId,
+        basePageId: pageId,
         name,
         slug,
+        isDefault,
         layouts: [
           {
             id: id("layout"),
@@ -1883,7 +2034,18 @@ function makePage({ name, slug, queryName, pathName, kpis, tables }) {
         ],
         userPermissions: [],
       },
-      new: true,
+      unpublishedCustomPage: {
+        id: pageId,
+        basePageId: pageId,
+        name,
+        isDefault,
+      },
+      publishedCustomPage: {
+        id: pageId,
+        basePageId: pageId,
+        name,
+        isDefault,
+      },
     },
     action,
   };
@@ -1894,7 +2056,7 @@ const specs = [
     name: "Executive Health",
     slug: "executive-health",
     queryName: "ExecutiveSummary",
-    pathName: "https://sumlink-analytics-api.onrender.com/api/executive-health",
+    pathName: "https://sumlink-analytics-api.onrender.com/api/v1/executive/summary",
     kpis: [
       { key: "active_users", label: "Active Users" },
       { key: "new_users", label: "New Users" },
@@ -1910,7 +2072,7 @@ const specs = [
         name: "ActiveUsersTrendChart",
         title: "Daily Users: Active vs New",
         type: "LINE_CHART",
-        axis: { x: "Date", y: "Users", showDataPointLabel: false },
+        axis: { x: "Date", y: "Users", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "Active Users",
@@ -1926,7 +2088,7 @@ const specs = [
         name: "StickinessTrendChart",
         title: "DAU / MAU Stickiness Trend",
         type: "LINE_CHART",
-        axis: { x: "Date", y: "Stickiness %", showDataPointLabel: false },
+        axis: { x: "Date", y: "Stickiness %", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "Stickiness %",
@@ -1938,7 +2100,7 @@ const specs = [
         name: "SessionsViewsTrendChart",
         title: "Session Activity vs Screen Views",
         type: "AREA_CHART",
-        axis: { x: "Date", y: "Count", showDataPointLabel: false },
+        axis: { x: "Date", y: "Count", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "Sessions",
@@ -1969,7 +2131,7 @@ const specs = [
     name: "Acquisition",
     slug: "acquisition",
     queryName: "AcquisitionSummary",
-    pathName: "https://sumlink-analytics-api.onrender.com/api/acquisition-churn",
+    pathName: "https://sumlink-analytics-api.onrender.com/api/v1/acquisition/summary",
     kpis: [
       { key: "installs", label: "Installs" },
       { key: "installing_users", label: "Installing Users" },
@@ -1983,7 +2145,7 @@ const specs = [
         name: "GrowthVsChurnTrendChart",
         title: "Install vs App Remove Trend",
         type: "LINE_CHART",
-        axis: { x: "Date", y: "Events", showDataPointLabel: false },
+        axis: { x: "Date", y: "Events", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "Installs",
@@ -2023,7 +2185,7 @@ const specs = [
         name: "DailyUsersBySourceChart",
         title: "Daily New Users by Source",
         type: "LINE_CHART",
-        axis: { x: "Date", y: "New Users", showDataPointLabel: false },
+        axis: { x: "Date", y: "New Users", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "Google / CPC",
@@ -2043,7 +2205,7 @@ const specs = [
         name: "InstallQualityTrendChart",
         title: "Install Quality: Installing Users vs Played Users",
         type: "AREA_CHART",
-        axis: { x: "Date", y: "Users", showDataPointLabel: false },
+        axis: { x: "Date", y: "Users", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "Installing Users",
@@ -2082,18 +2244,18 @@ const specs = [
     ],
     tables: [
       { name: "DailyGrowthChurn", label: "Daily Acquisition, App Remove, and Never-Played Proxy", path: "daily_growth_churn" },
-      { name: "CampaignPerformance", label: "Campaign Performance â€” New Users and Sessions", path: "campaign_performance" },
-      { name: "TrafficSources", label: "Traffic Source Quality â€” Sessions and Engagement", path: "traffic_sources" },
+      { name: "CampaignPerformance", label: "Campaign Performance - New Users and Sessions", path: "campaign_performance" },
+      { name: "TrafficSources", label: "Traffic Source Quality - Sessions and Engagement", path: "traffic_sources" },
       { name: "DailySourceUsers", label: "Daily New Users by Acquisition Source", path: "daily_source_users" },
-      { name: "Countries", label: "Country Breakdown â€” Active Users", path: "countries" },
-      { name: "Devices", label: "Device Model Breakdown â€” Active Users", path: "devices" },
+      { name: "Countries", label: "Country Breakdown - Active Users", path: "countries" },
+      { name: "Devices", label: "Device Model Breakdown - Active Users", path: "devices" },
     ],
   },
   {
     name: "Onboarding",
     slug: "onboarding",
     queryName: "OnboardingSummary",
-    pathName: "https://sumlink-analytics-api.onrender.com/api/onboarding-funnel",
+    pathName: "https://sumlink-analytics-api.onrender.com/api/v1/onboarding/summary",
     kpis: [
       { key: "tutorial_started", label: "Tutorial Started" },
       { key: "tutorial_completed", label: "Tutorial Completed" },
@@ -2103,14 +2265,14 @@ const specs = [
       { key: "failure_pct", label: "Tutorial Failure %", suffix: "%" },
       { key: "skip_pct", label: "Tutorial Skip %", suffix: "%" },
       { key: "average_tutorial_time", label: "Avg Tutorial Time Sec" },
-      { key: "launch_to_first_step_pct", label: "Launch â†’ Step 1 %", suffix: "%" },
+      { key: "launch_to_first_step_pct", label: "Launch to Step 1 %", suffix: "%" },
       { key: "first_step_drop_off_users", label: "Step 1 Drop-off Users" },
       { key: "worst_tutorial_step", label: "Worst Tutorial Step" },
     ],
     charts: [
       {
         name: "OnboardingRealFunnelChart",
-        title: "Funnel: Install â†’ Tutorial â†’ First Level",
+        title: "Funnel: Install to Tutorial to First Level",
         type: "CUSTOM_ECHART",
         axis: { x: "Onboarding Stage", y: "Users", labelEvery: 1, echartConfig: onboardingManagerFunnelEChart() },
         series: [
@@ -2164,7 +2326,7 @@ const specs = [
         name: "DailyTutorialCompletedByStepChart",
         title: "Daily Step Success by Tutorial Step",
         type: "LINE_CHART",
-        axis: { x: "Date", y: "Successful Users", showDataPointLabel: false },
+        axis: { x: "Date", y: "Successful Users", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "Step 1",
@@ -2200,7 +2362,7 @@ const specs = [
         name: "TutorialFrustrationIndexTrendChart",
         title: "Tutorial Frustration Trend",
         type: "LINE_CHART",
-        axis: { x: "Date", y: "Frustration %", showDataPointLabel: false },
+        axis: { x: "Date", y: "Frustration %", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "Frustration %",
@@ -2264,7 +2426,7 @@ const specs = [
         name: "TutorialSkipAttemptTrendChart",
         title: "Tutorial Skip Attempt Trend",
         type: "LINE_CHART",
-        axis: { x: "Date", y: "Attempts", showDataPointLabel: false },
+        axis: { x: "Date", y: "Attempts", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "Skip Attempts",
@@ -2286,8 +2448,8 @@ const specs = [
       },
     ],
     tables: [
-      { name: "DetailedOnboardingFunnel", label: "Detailed Onboarding Funnel â€” Users, Conversion, Drop-off", path: "detailed_funnel" },
-      { name: "TutorialStepAnalysis", label: "Tutorial Step Diagnostics â€” Fail, Skip, Drop-off", path: "step_analysis" },
+      { name: "DetailedOnboardingFunnel", label: "Detailed Onboarding Funnel - Users, Conversion, Drop-off", path: "detailed_funnel" },
+      { name: "TutorialStepAnalysis", label: "Tutorial Step Diagnostics - Fail, Skip, Drop-off", path: "step_analysis" },
       { name: "DailyStepCompletion", label: "Daily Tutorial Completed by Step", path: "daily_step_completion" },
       { name: "TutorialRawStepEvents", label: "Raw Tutorial Event Mapping", path: "steps" },
     ],
@@ -2296,7 +2458,7 @@ const specs = [
     name: "Gameplay",
     slug: "gameplay",
     queryName: "GameplaySummary",
-    pathName: "https://sumlink-analytics-api.onrender.com/api/gameplay-balancing",
+    pathName: "https://sumlink-analytics-api.onrender.com/api/v1/gameplay/summary",
     kpis: [
       { key: "level_started", label: "Level Started" },
       { key: "level_completed", label: "Level Completed" },
@@ -2308,7 +2470,7 @@ const specs = [
         name: "NewReturningByLevelChart",
         title: "Level Starts: New vs Returning Players",
         type: "LINE_CHART",
-        axis: { x: "Level", y: "Active Users", showDataPointLabel: false },
+        axis: { x: "Level", y: "Active Users", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "New",
@@ -2380,7 +2542,7 @@ const specs = [
         name: "HintTrendChart",
         title: "Hint Event Trend",
         type: "LINE_CHART",
-        axis: { x: "Date", y: "Events", showDataPointLabel: false },
+        axis: { x: "Date", y: "Events", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "Highlighted",
@@ -2424,7 +2586,7 @@ const specs = [
         name: "AverageTimeByLevelChart",
         title: "Avg Time by Level",
         type: "COLUMN_CHART",
-        axis: { x: "Level", y: "Seconds", showDataPointLabel: false },
+        axis: { x: "Level", y: "Seconds", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "Average Time",
@@ -2436,7 +2598,7 @@ const specs = [
     tables: [
       {
         name: "LevelPerformance",
-        label: "Level Performance Details â€” Completion, Drop-off, Hints, Avg Time",
+        label: "Level Performance Details - Completion, Drop-off, Hints, Avg Time",
         path: "level_performance",
         data: "{{(((typeof GameplaySummary !== \"undefined\" ? GameplaySummary.data?.data : null) || appsmith.store[\"GameplaySummary_lastData\"] || {})?.level_performance || []).filter(r => String(r.level || '').startsWith('level_')).slice(0, 40).map(r => ({ Level: String(r.level || '').replace('level_', 'Level '), Started: Number(r.started || 0), Completed: Number(r.completed || 0), 'Completion %': Number(r.completion_pct || 0).toFixed(2) + '%', 'Drop-off Users': Number(r.drop_off_users || 0), 'Drop-off %': Number(r.drop_off_pct || 0).toFixed(2) + '%', Hints: Number(r.hints || 0), 'Hints / Completed User': Number(r.hints_per_completed_user || 0).toFixed(2), 'Avg Time Sec': Math.round(Number(r.average_time || 0)) }))}}",
         markdown: "{{(() => { const rows = (((typeof GameplaySummary !== \"undefined\" ? GameplaySummary.data?.data : null) || appsmith.store[\"GameplaySummary_lastData\"] || {})?.level_performance || []).filter(r => String(r.level || '').startsWith('level_')).slice(0, 25); if (!rows.length) return 'No level performance rows returned from GA4 for the selected filters.'; const fmt = n => Number(n || 0).toLocaleString(); const header='| Level | Started | Completed | Completion % | Drop-off Users | Drop-off % | Hints | Hints / Completed | Avg Time Sec |\\n|---|---:|---:|---:|---:|---:|---:|---:|---:|'; const body = rows.map(r => `| ${String(r.level || '').replace('level_', 'Level ')} | ${fmt(r.started)} | ${fmt(r.completed)} | ${Number(r.completion_pct || 0).toFixed(2)}% | ${fmt(r.drop_off_users)} | ${Number(r.drop_off_pct || 0).toFixed(2)}% | ${fmt(r.hints)} | ${Number(r.hints_per_completed_user || 0).toFixed(2)} | ${Math.round(Number(r.average_time || 0))} |`).join('\\n'); return header + '\\n' + body; })()}}",
@@ -2447,7 +2609,7 @@ const specs = [
     name: "Retention",
     slug: "retention",
     queryName: "RetentionSummary",
-    pathName: "https://sumlink-analytics-api.onrender.com/api/retention",
+    pathName: "https://sumlink-analytics-api.onrender.com/api/v1/retention/summary",
     kpis: [],
     charts: [],
     oldCharts: [
@@ -2455,7 +2617,7 @@ const specs = [
         name: "RetentionDailyActivityChart",
         title: "DAU / WAU / MAU Trend",
         type: "LINE_CHART",
-        axis: { x: "Date", y: "Users", showDataPointLabel: false },
+        axis: { x: "Date", y: "Users", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "DAU",
@@ -2475,7 +2637,7 @@ const specs = [
         name: "RetentionUserEngagementChart",
         title: "User Engagement Duration Trend",
         type: "AREA_CHART",
-        axis: { x: "Date", y: "Seconds", showDataPointLabel: false },
+        axis: { x: "Date", y: "Seconds", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "User Engagement Duration",
@@ -2487,7 +2649,7 @@ const specs = [
         name: "RetentionStickinessTrendChart",
         title: "DAU / MAU Stickiness Trend",
         type: "LINE_CHART",
-        axis: { x: "Date", y: "Stickiness %", showDataPointLabel: false },
+        axis: { x: "Date", y: "Stickiness %", showDataPointLabel: true, labelEvery: 5 },
         series: [
           {
             name: "Stickiness %",
@@ -2499,7 +2661,7 @@ const specs = [
         name: "RetentionCurveChart",
         title: "Cohort Retention: Day 0 Users Returning by Day",
         type: "LINE_CHART",
-        axis: { x: "Day", y: "Users", showDataPointLabel: false },
+        axis: { x: "Day", y: "Users", showDataPointLabel: true, labelEvery: 2 },
         series: [
           {
             name: "Active Users",
@@ -2553,6 +2715,9 @@ const app = {
   fileFormatVersion: 1,
   serverSchemaVersion: 5,
   exportedApplication: {
+    id: "64a5df3c2bc8e5f3b81f0000",
+    baseId: "64a5df3c2bc8e5f3b81f0000",
+    baseApplicationId: "64a5df3c2bc8e5f3b81f0000",
     userPermissions: ["manage:applications", "export:applications", "read:applications", "publish:applications", "makePublic:applications"],
     name: appName,
     isPublic: false,
@@ -2562,6 +2727,12 @@ const app = {
     icon: "line-chart",
     appLayout: { type: "DESKTOP" },
     new: true,
+    publishedDefaultPageName: "Executive Health",
+    unpublishedDefaultPageName: "Executive Health",
+    publishedDefaultPageId: "64a5df3c2bc8e5f3b81f0001",
+    unpublishedDefaultPageId: "64a5df3c2bc8e5f3b81f0001",
+    publishedDefaultBasePageId: "64a5df3c2bc8e5f3b81f0001",
+    unpublishedDefaultBasePageId: "64a5df3c2bc8e5f3b81f0001",
   },
   pluginList: [
     {
@@ -2576,6 +2747,7 @@ const app = {
       name: "SumlinkAPI",
       pluginId: "restapi-plugin",
       pluginPackageName: "restapi-plugin",
+      userPermissions: [],
       datasourceConfiguration: {
         url: baseUrl,
         headers: [
@@ -2601,6 +2773,150 @@ const app = {
   unpublishedLayoutmongoEscapedWidgets: {},
 };
 
+function stripCloudImportFields(node) {
+  if (Array.isArray(node)) return node.map(stripCloudImportFields);
+  if (!node || typeof node !== "object") return node;
+
+  const clone = {};
+  for (const [key, value] of Object.entries(node)) {
+    if (key === "publishedPage" || key === "publishedCustomPage" || key === "publishedAction") continue;
+    if (key === "actionCollectionList" || key === "customJSLibList" || key === "publishedLayoutmongoEscapedWidgets") continue;
+    if (key === "decryptedFields") {
+      clone[key] = {};
+      continue;
+    }
+    clone[key] = stripCloudImportFields(value);
+  }
+
+  if (clone.pageList) {
+    clone.pageList = clone.pageList.map((page) => {
+      const next = {
+        userPermissions: page.userPermissions || [],
+        unpublishedPage: stripCloudImportFields(page.unpublishedPage),
+        new: page.new ?? true,
+      };
+      if (page.id) next.id = page.id;
+      if (page.baseId) next.baseId = page.baseId;
+      if (page.basePageId) next.basePageId = page.basePageId;
+      if (page.isDefault !== undefined) next.isDefault = page.isDefault;
+      if (page.defaultPageId) next.defaultPageId = page.defaultPageId;
+      if (page.unpublishedCustomPage) next.unpublishedCustomPage = stripCloudImportFields(page.unpublishedCustomPage);
+      if (page.publishedCustomPage) next.publishedCustomPage = stripCloudImportFields(page.publishedCustomPage);
+      if (page.publishedPage?.slug || page.unpublishedPage?.slug) {
+        next.unpublishedPage.slug = page.unpublishedPage?.slug || page.publishedPage?.slug;
+      }
+      return next;
+    });
+  }
+
+  if (clone.actionList) {
+    clone.actionList = clone.actionList.map((action) => {
+      const next = {
+        pluginType: action.pluginType,
+        pluginId: action.pluginId,
+        unpublishedAction: stripCloudImportFields(action.unpublishedAction),
+        new: action.new ?? false,
+      };
+      if (action.id) next.id = action.id;
+      if (action.baseId) next.baseId = action.baseId;
+      if (action.baseActionId) next.baseActionId = action.baseActionId;
+      if (action.basePageId) next.basePageId = action.basePageId;
+      if (action.publishedAction) next.publishedAction = stripCloudImportFields(action.publishedAction);
+      return next;
+    });
+  }
+
+  return clone;
+}
+
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.writeFileSync(outFile, `${JSON.stringify(app, null, 2)}\n`);
+
+const cloudLite = {
+  clientVersion: app.clientVersion,
+  fileFormatVersion: app.fileFormatVersion,
+  serverSchemaVersion: app.serverSchemaVersion,
+  exportedApplication: {
+    id: app.exportedApplication.id,
+    baseId: app.exportedApplication.baseId,
+    baseApplicationId: app.exportedApplication.baseApplicationId,
+    userPermissions: [],
+    name: app.exportedApplication.name,
+    isPublic: app.exportedApplication.isPublic,
+    appIsExample: app.exportedApplication.appIsExample,
+    unreadCommentThreads: 0,
+    color: app.exportedApplication.color,
+    icon: app.exportedApplication.icon,
+    appLayout: structuredClone(app.exportedApplication.appLayout),
+    new: true,
+    publishedDefaultPageName: app.exportedApplication.publishedDefaultPageName,
+    unpublishedDefaultPageName: app.exportedApplication.unpublishedDefaultPageName,
+    publishedDefaultPageId: app.exportedApplication.publishedDefaultPageId,
+    unpublishedDefaultPageId: app.exportedApplication.unpublishedDefaultPageId,
+    publishedDefaultBasePageId: app.exportedApplication.publishedDefaultBasePageId,
+    unpublishedDefaultBasePageId: app.exportedApplication.unpublishedDefaultBasePageId,
+  },
+  pluginList: structuredClone(app.pluginList),
+  datasourceList: structuredClone(app.datasourceList),
+  pageList: app.pageList.map((page) => ({
+    id: page.id,
+    baseId: page.baseId,
+    basePageId: page.basePageId,
+    defaultPageId: page.defaultPageId,
+    isDefault: page.isDefault,
+    new: page.new,
+    userPermissions: [],
+    unpublishedPage: {
+      id: page.unpublishedPage?.id,
+      baseId: page.unpublishedPage?.baseId,
+      basePageId: page.unpublishedPage?.basePageId,
+      name: page.unpublishedPage?.name,
+      slug: page.unpublishedPage?.slug,
+      layouts: page.unpublishedPage?.layouts,
+      userPermissions: [],
+      isDefault: page.unpublishedPage?.isDefault,
+    },
+    unpublishedCustomPage: {
+      id: page.unpublishedCustomPage?.id,
+      basePageId: page.unpublishedCustomPage?.basePageId,
+      name: page.unpublishedCustomPage?.name,
+      isDefault: page.unpublishedCustomPage?.isDefault,
+    },
+  })),
+  publishedDefaultPageName: app.publishedDefaultPageName,
+  unpublishedDefaultPageName: app.unpublishedDefaultPageName,
+  actionList: app.actionList.map((action) => ({
+    id: action.id,
+    baseId: action.baseId,
+    baseActionId: action.baseActionId,
+    basePageId: action.basePageId,
+    pluginType: action.pluginType,
+    pluginId: action.pluginId,
+    new: action.new,
+    unpublishedAction: {
+      id: action.unpublishedAction?.id,
+      baseId: action.unpublishedAction?.baseId,
+      name: action.unpublishedAction?.name,
+      pageId: action.unpublishedAction?.pageId,
+      basePageId: action.unpublishedAction?.basePageId,
+      pluginType: action.unpublishedAction?.pluginType,
+      pluginId: action.unpublishedAction?.pluginId,
+      pluginPackageName: action.unpublishedAction?.pluginPackageName,
+      actionConfiguration: action.unpublishedAction?.actionConfiguration,
+      executeOnLoad: action.unpublishedAction?.executeOnLoad,
+      dynamicBindingPathList: action.unpublishedAction?.dynamicBindingPathList || [],
+      jsonPathKeys: action.unpublishedAction?.jsonPathKeys || [],
+      isValid: true,
+      invalids: [],
+      userPermissions: [],
+    },
+  })),
+  actionCollectionList: [],
+  customJSLibList: [],
+  decryptedFields: {},
+  publishedLayoutmongoEscapedWidgets: {},
+  unpublishedLayoutmongoEscapedWidgets: {},
+};
+
+fs.writeFileSync(path.resolve("appsmith/sumlink-analytics-dashboard-cloud-lite.appsmith.json"), `${JSON.stringify(cloudLite, null, 2)}\n`);
 console.log(outFile);
