@@ -2,19 +2,19 @@
 
 Live GA4 analytics dashboard system for Appsmith.
 
-- `backend/`: production FastAPI backend connected to GA4 Data API
-- `appsmith/`: Appsmith dashboard export/build files
+- `backend/`: production FastAPI backend connected to GA4 Data API and BigQuery
+- `appsmith/`: single Appsmith dashboard export plus page notes
 - `render.yaml`: Render Blueprint for deploying the FastAPI backend
 - `node-backend/`: older Node prototype kept as reference
 
 GA4 property: `516899630`.
 
-## Local backend
+## Local Backend
 
 ```powershell
 cd backend
 .\.venv\Scripts\Activate.ps1
-$env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\harsh\credentials\phrasal-clover-493807-m9-4019d33cb4de.json"
+$env:GOOGLE_APPLICATION_CREDENTIALS="C:\path\to\ga4-service-account.json"
 $env:GA4_PROPERTY_ID="516899630"
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
@@ -22,7 +22,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 Local URL:
 
 ```text
-https://sumlink-analytics-api.onrender.com
+http://localhost:8000
 ```
 
 Useful checks:
@@ -32,13 +32,29 @@ Useful checks:
 /ready
 ```
 
-## Production flow
+## Production Flow
 
-Appsmith dashboard → Render FastAPI API → GA4 Data API
+Appsmith dashboard -> Render FastAPI API -> GA4 Data API and BigQuery
 
 Do not put the GA4 service-account JSON inside Appsmith. Appsmith should only call the backend API.
 
-## Render deployment
+## Appsmith File
+
+Use this dashboard export for the Appsmith workflow:
+
+- `appsmith/Sumlink Dashboard.json`: default production copy for sharing/import.
+
+The file contains the five dashboard pages and the five protected Render API queries. Keep duplicate exports out of the repo unless they are intentionally archived.
+
+Refresh local self-hosted Appsmith from the export with the Docker-side apply helper:
+
+```powershell
+docker cp "appsmith/Sumlink Dashboard.json" <appsmith-container>:/tmp/sumlink-analytics-dashboard.appsmith.json
+docker cp scripts/apply-appsmith-import-local.cjs <appsmith-container>:/tmp/apply-appsmith-import-local.cjs
+docker exec <appsmith-container> node /tmp/apply-appsmith-import-local.cjs
+```
+
+## Render Deployment
 
 See [RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md).
 

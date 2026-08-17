@@ -131,6 +131,9 @@ class GA4Service:
             "app_version": ("appVersion", filters.app_version),
             "traffic_source": ("sessionSource", filters.traffic_source),
             "campaign": ("sessionCampaignName", filters.campaign),
+            "channel": ("firstUserDefaultChannelGroup", filters.channel),
+            "first_user_source": ("firstUserSource", filters.first_user_source),
+            "first_user_medium": ("firstUserMedium", filters.first_user_medium),
             "user_type": ("newVsReturning", filters.user_type),
         }
         expressions = [_exact_filter(dimension, value) for dimension, value in mapping.values() if value]

@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { MongoClient, ObjectId } = require("/opt/appsmith/rts/node_modules/mongodb");
+const { MongoClient } = require("/opt/appsmith/rts/node_modules/mongodb");
 
 const APP_ID = process.env.APPSMITH_APP_ID || "6a5df3c2bc8e5f3b81feb820";
 const IMPORT_PATH = process.env.APPSMITH_IMPORT_PATH || "/tmp/sumlink-analytics-dashboard.appsmith.json";
@@ -13,19 +13,30 @@ function pageName(page) {
 }
 
 function rewriteOnLoad(layout, actionIdByName) {
-  const groups = layout.layoutOnLoadActions || [];
+  const groups = Array.isArray(layout.layoutOnLoadActions) ? layout.layoutOnLoadActions : [];
   return groups.map((group) =>
-    group.map((entry) => ({
+    (Array.isArray(group) ? group : []).map((entry) => ({
       ...entry,
       id: actionIdByName.get(entry.name) || entry.id,
     })),
   );
 }
 
+function normalizeLayout(layout) {
+  const next = { ...layout };
+  next.layoutOnLoadActions = Array.isArray(next.layoutOnLoadActions) ? next.layoutOnLoadActions : [];
+  next.layoutOnLoadActionErrors = Array.isArray(next.layoutOnLoadActionErrors) ? next.layoutOnLoadActionErrors : [];
+  next.dynamicBindingPathList = Array.isArray(next.dynamicBindingPathList) ? next.dynamicBindingPathList : [];
+  next.widgetNames = Array.isArray(next.widgetNames) ? next.widgetNames : [];
+  next.deleted = false;
+  return next;
+}
+
 async function main() {
   const user = process.env.APPSMITH_MONGODB_USER || "appsmith";
   const password = process.env.APPSMITH_MONGODB_PASSWORD || "";
-  const uri = `mongodb://${encodeURIComponent(user)}:${encodeURIComponent(password)}@localhost:27017/appsmith?authSource=appsmith`;
+  const uri = process.env.APPSMITH_DB_URL
+    || `mongodb://${encodeURIComponent(user)}:${encodeURIComponent(password)}@localhost:27017/appsmith?authSource=appsmith`;
   const client = new MongoClient(uri, { serverSelectionTimeoutMS: 5000 });
   await client.connect();
   const db = client.db("appsmith");
@@ -33,6 +44,24 @@ async function main() {
   const imported = JSON.parse(fs.readFileSync(IMPORT_PATH, "utf8"));
   const pagesInImport = imported.pageList || imported.pages || [];
   const actionsInImport = imported.actionList || imported.actions || [];
+  const importedPageNameById = new Map();
+  for (const importedPage of pagesInImport) {
+    const name = pageName(importedPage);
+    const candidateIds = [
+      importedPage.id,
+      importedPage.baseId,
+      importedPage.basePageId,
+      importedPage.unpublishedPage?.id,
+      importedPage.unpublishedPage?.baseId,
+      importedPage.unpublishedPage?.basePageId,
+      importedPage.publishedPage?.id,
+      importedPage.publishedPage?.baseId,
+      importedPage.publishedPage?.basePageId,
+    ].filter(Boolean);
+    for (const id of candidateIds) {
+      importedPageNameById.set(String(id), name);
+    }
+  }
 
   const realPages = await db.collection("newPage")
     .find({ applicationId: APP_ID, deleted: { $ne: true } })
@@ -52,7 +81,8 @@ async function main() {
       console.log("SKIP_ACTION_MISSING", name);
       continue;
     }
-    const importedPageName = importedAction.unpublishedAction?.pageId || importedAction.publishedAction?.pageId;
+    const importedPageRef = importedAction.unpublishedAction?.pageId || importedAction.publishedAction?.pageId;
+    const importedPageName = importedPageNameById.get(String(importedPageRef)) || importedPageRef;
     const page = pageByName.get(importedPageName);
     if (!page) {
       console.log("SKIP_ACTION_PAGE_MISSING", name, importedPageName);
@@ -92,14 +122,14 @@ async function main() {
       continue;
     }
 
-    const unpublishedLayouts = (importedPage.unpublishedPage?.layouts || []).map((layout) => ({
+    const unpublishedLayouts = (importedPage.unpublishedPage?.layouts || []).map((layout) => normalizeLayout({
       ...layout,
       id: existing.unpublishedPage?.layouts?.[0]?.id || layout.id,
       layoutOnLoadActions: rewriteOnLoad(layout, actionIdByName),
       validOnPageLoadActions: true,
       layoutOnLoadActionErrors: [],
     }));
-    const publishedLayouts = (importedPage.publishedPage?.layouts || importedPage.unpublishedPage?.layouts || []).map((layout) => ({
+    const publishedLayouts = (importedPage.publishedPage?.layouts || importedPage.unpublishedPage?.layouts || []).map((layout) => normalizeLayout({
       ...layout,
       id: existing.publishedPage?.layouts?.[0]?.id || layout.id,
       layoutOnLoadActions: rewriteOnLoad(layout, actionIdByName),
@@ -112,15 +142,15 @@ async function main() {
       {
         $set: {
           updatedAt: new Date(),
-          id: importedPage.id || existing.id,
-          baseId: importedPage.baseId || importedPage.unpublishedPage?.baseId || existing.baseId,
-          basePageId: importedPage.basePageId || importedPage.unpublishedPage?.basePageId || existing.basePageId,
-          "unpublishedPage.id": importedPage.unpublishedPage?.id || existing.unpublishedPage?.id,
-          "publishedPage.id": importedPage.publishedPage?.id || importedPage.unpublishedPage?.id || existing.publishedPage?.id,
-          "unpublishedPage.baseId": importedPage.unpublishedPage?.baseId || importedPage.baseId || existing.unpublishedPage?.baseId,
-          "publishedPage.baseId": importedPage.publishedPage?.baseId || importedPage.unpublishedPage?.baseId || existing.publishedPage?.baseId,
-          "unpublishedPage.basePageId": importedPage.unpublishedPage?.basePageId || importedPage.basePageId || existing.unpublishedPage?.basePageId,
-          "publishedPage.basePageId": importedPage.publishedPage?.basePageId || importedPage.unpublishedPage?.basePageId || existing.publishedPage?.basePageId,
+          id: String(existing._id),
+          baseId: String(existing._id),
+          basePageId: String(existing._id),
+          "unpublishedPage.id": String(existing._id),
+          "publishedPage.id": String(existing._id),
+          "unpublishedPage.baseId": String(existing._id),
+          "publishedPage.baseId": String(existing._id),
+          "unpublishedPage.basePageId": String(existing._id),
+          "publishedPage.basePageId": String(existing._id),
           "unpublishedPage.name": name,
           "publishedPage.name": name,
           "unpublishedPage.slug": importedPage.unpublishedPage?.slug,

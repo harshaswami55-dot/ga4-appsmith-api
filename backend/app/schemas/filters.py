@@ -21,6 +21,9 @@ class DashboardFilters(BaseModel):
     app_version: str | None = None
     traffic_source: str | None = None
     campaign: str | None = None
+    channel: str | None = None
+    first_user_source: str | None = None
+    first_user_medium: str | None = None
     user_type: Literal["new", "returning"] | None = None
     level_number: str | None = None
     tutorial_step: str | None = None
@@ -38,6 +41,9 @@ class DashboardFilters(BaseModel):
         "app_version",
         "traffic_source",
         "campaign",
+        "channel",
+        "first_user_source",
+        "first_user_medium",
         "level_number",
         "tutorial_step",
     )
@@ -66,6 +72,9 @@ def get_dashboard_filters(
     app_version: str | None = None,
     traffic_source: str | None = None,
     campaign: str | None = None,
+    channel: str | None = None,
+    first_user_source: str | None = None,
+    first_user_medium: str | None = None,
     user_type: Literal["new", "returning"] | None = None,
     level_number: str | None = None,
     tutorial_step: str | None = None,
@@ -82,6 +91,9 @@ def get_dashboard_filters(
             app_version=app_version,
             traffic_source=traffic_source,
             campaign=campaign,
+            channel=channel,
+            first_user_source=first_user_source,
+            first_user_medium=first_user_medium,
             user_type=user_type,
             level_number=level_number,
             tutorial_step=tutorial_step,

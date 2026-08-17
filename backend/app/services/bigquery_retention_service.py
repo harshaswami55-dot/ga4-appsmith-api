@@ -115,6 +115,9 @@ WITH raw_events AS (
         device.mobile_model_name AS device_model,
         device.category AS device_category,
         geo.country AS country,
+        traffic_source.name AS channel,
+        traffic_source.source AS first_user_source,
+        traffic_source.medium AS first_user_medium,
         (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'level_number') AS level_number,
         (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'tutorial_step') AS tutorial_step
     FROM {table}
@@ -195,6 +198,9 @@ ORDER BY sort_group, cohort
             "app_version": "app_version",
             "level_number": "level_number",
             "tutorial_step": "tutorial_step",
+            "channel": "channel",
+            "first_user_source": "first_user_source",
+            "first_user_medium": "first_user_medium",
         }
         return "\n      ".join(f"AND (@{name} IS NULL OR {column} = @{name})" for name, column in mapping.items())
 
@@ -208,6 +214,9 @@ ORDER BY sort_group, cohort
             "app_version",
             "level_number",
             "tutorial_step",
+            "channel",
+            "first_user_source",
+            "first_user_medium",
         ]
         return [bigquery.ScalarQueryParameter(name, "STRING", getattr(filters, name)) for name in names]
 

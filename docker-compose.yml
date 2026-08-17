@@ -15,5 +15,5 @@ services:
       AUTH_ENABLED: "false"
       CORS_ORIGINS: "*"
     volumes:
-      - "${GA4_CREDENTIALS_HOST_PATH:-C:/Users/harsh/credentials/phrasal-clover-493807-m9-4019d33cb4de.json}:/run/secrets/ga4-service-account.json:ro"
+      - "${GA4_CREDENTIALS_HOST_PATH:-C:/path/to/ga4-service-account.json}:/run/secrets/ga4-service-account.json:ro"
     restart: unless-stopped
