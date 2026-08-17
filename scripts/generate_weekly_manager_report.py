@@ -24,6 +24,7 @@ ENDPOINTS = {
     "Segments": "/api/v1/segments/summary",
     "Alert Rules": "/api/v1/alerts/rules",
     "Alert Summary": "/api/v1/alerts/summary",
+    "Predictions": "/api/v1/predictions/summary",
 }
 
 
@@ -106,12 +107,24 @@ def main() -> int:
         lines.append("- No threshold alerts were triggered for the selected comparison window.")
     lines.append("")
 
+    prediction_payload = results.get("Predictions", {}).get("data", {})
+    forecasts = prediction_payload.get("forecasts", [])
+    lines.extend(["## Baseline Forecast", ""])
+    if forecasts:
+        for item in forecasts:
+            lines.append(
+                f"- {item.get('metric')}: current {item.get('current')}, forecast {item.get('forecast_next_period')}, risk {item.get('risk')}, confidence {item.get('confidence')}"
+            )
+    else:
+        lines.append("- Forecast unavailable for this run.")
+    lines.append("")
+
     lines.extend(
         [
             "## Alert Governance",
             "",
             "Configured alert thresholds are maintained in the backend alert rules service.",
-            "Current production use is threshold-based with live previous-period comparison; predictive modelling starts after stable baseline history is available.",
+            "Current production use is threshold-based with live previous-period comparison and baseline trend forecasting.",
             "",
             "## Notes",
             "",

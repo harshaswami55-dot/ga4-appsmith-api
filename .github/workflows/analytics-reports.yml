@@ -1,0 +1,24 @@
+name: Analytics Reports
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 3 * * 1"
+
+jobs:
+  weekly-manager-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Generate weekly manager report
+        env:
+          SUMLINK_API_BASE: https://sumlink-analytics-api.onrender.com
+          SUMLINK_API_KEY: ${{ secrets.SUMLINK_API_KEY }}
+        run: python scripts/generate_weekly_manager_report.py --cadence weekly
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sumlink-weekly-manager-report
+          path: reports/weekly/*.md
