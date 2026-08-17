@@ -19,7 +19,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origin_list,
     allow_credentials=settings.cors_origin_list != ["*"],
-    allow_methods=["GET", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type", "X-API-Key", "x-api-key"],
 )
 app.include_router(api_router, prefix=settings.api_prefix)
@@ -40,4 +40,3 @@ def health() -> dict:
 @app.get("/ready", tags=["Operations"])
 def readiness() -> dict:
     return {"status": "ready", "ga4": get_ga4_service().test_connection()}
-

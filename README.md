@@ -30,6 +30,9 @@ Useful checks:
 ```text
 /health
 /ready
+/api/v1/segments/summary
+/api/v1/alerts/rules
+/api/v1/alerts/summary
 ```
 
 ## Production Flow
@@ -72,3 +75,22 @@ cd backend
 ```
 
 The backend has been validated against the live GA4 property using the local service-account credential.
+
+## Analytics Roadmap Implementation
+
+- `reports/Sumlink_Analytics_1_Year_Roadmap.md`: manager-facing 1-year roadmap.
+- `docs/analytics/ROADMAP_IMPLEMENTATION_TRACKER.md`: quarter-by-quarter execution tracker.
+- `docs/analytics/KPI_DICTIONARY.md`: KPI formulas, sources, and validation rules.
+- `docs/analytics/Q1_SPRINT_BACKLOG.md`: practical sprint backlog for the first quarter.
+- `docs/analytics/VALIDATION_AND_REPORTING_CADENCE.md`: weekly validation and reporting checklist.
+- `docs/analytics/ALERT_RULES.md`: first alert definitions for Q3 monitoring.
+- `docs/analytics/REPORT_AUTOMATION.md`: Q4 weekly manager report automation.
+
+Implemented roadmap API additions:
+
+- `GET /api/v1/segments/summary`: Q2 country, version, OS, device, source/channel, user-type, and level segmentation.
+- `GET /api/v1/alerts/rules`: Q3 alert threshold catalog.
+- `POST /api/v1/alerts/evaluate`: Q3 threshold-based alert evaluation.
+- `GET /api/v1/alerts/summary`: Q3 live current-period vs previous-period alert evaluation.
+- `scripts/generate_weekly_manager_report.py`: Q4 live weekly manager report generator.
+- `scripts/generate_monthly_manager_report.py`: Q4 live monthly manager report generator.
